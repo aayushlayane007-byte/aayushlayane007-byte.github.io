@@ -1,27 +1,519 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Aayush Layane — Portfolio</title>
+  <meta name="description" content="Dark alter-ego portfolio — engineering, projects, and experience." />
+  <style>
+    :root{
+      --bg:#0a0a0c;
+      --panel:rgba(255,255,255,0.06);
+      --panel2:rgba(255,255,255,0.04);
+      --border:rgba(255,255,255,0.10);
+      --text:#eaeaea;
+      --muted:#a7a7a7;
+      --muted2:#7f7f7f;
+
+      /* Mesh (4-corner) colors */
+      --c1:#0d0d0f;   /* top-left: void */
+      --c2:#2a1e3f;   /* top-right: deep purple */
+      --c3:#1a1a1a;   /* bottom-left: graphite */
+      --c4:#d6a85c;   /* bottom-right: muted gold */
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, "Helvetica Neue", sans-serif;
+      color:var(--text);
+      background:var(--bg);
+      overflow-x:hidden;
+    }
+
+    /* ===== Background system ===== */
+    .bg{
+      position:fixed;
+      inset:0;
+      z-index:-3;
+      background: radial-gradient(1200px 900px at 50% 0%, rgba(255,255,255,0.06), transparent 55%),
+                  radial-gradient(900px 700px at 50% 100%, rgba(255,255,255,0.04), transparent 55%),
+                  var(--bg);
+    }
+
+    /* 4-circle mesh gradient */
+    .mesh{
+      position:fixed;
+      inset:-20%;
+      z-index:-2;
+      filter: blur(80px);
+      opacity:0.85;
+      transform: translateZ(0);
+      pointer-events:none;
+    }
+    .blob{
+      position:absolute;
+      width:60vmax;
+      height:60vmax;
+      border-radius:999px;
+      will-change: transform;
+      mix-blend-mode: screen; /* keeps it “metallic” on dark */
+      opacity:0.9;
+    }
+    .b1{ left: -10%; top: -12%; background: radial-gradient(circle at 30% 30%, var(--c1), transparent 60%); }
+    .b2{ right:-14%; top: -8%;  background: radial-gradient(circle at 70% 30%, var(--c2), transparent 60%); }
+    .b3{ left: -12%; bottom:-18%;background: radial-gradient(circle at 30% 70%, var(--c3), transparent 60%); }
+    .b4{ right:-10%; bottom:-14%;background: radial-gradient(circle at 70% 70%, var(--c4), transparent 58%); opacity:0.75; }
+
+    /* subtle animated drift */
+    @keyframes drift1 { 0%{transform:translate(0,0) scale(1)} 50%{transform:translate(6%,4%) scale(1.06)} 100%{transform:translate(0,0) scale(1)} }
+    @keyframes drift2 { 0%{transform:translate(0,0) scale(1)} 50%{transform:translate(-5%,5%) scale(1.04)} 100%{transform:translate(0,0) scale(1)} }
+    @keyframes drift3 { 0%{transform:translate(0,0) scale(1)} 50%{transform:translate(5%,-6%) scale(1.05)} 100%{transform:translate(0,0) scale(1)} }
+    @keyframes drift4 { 0%{transform:translate(0,0) scale(1)} 50%{transform:translate(-6%,-4%) scale(1.03)} 100%{transform:translate(0,0) scale(1)} }
+
+    .b1{ animation:drift1 18s ease-in-out infinite; }
+    .b2{ animation:drift2 22s ease-in-out infinite; }
+    .b3{ animation:drift3 20s ease-in-out infinite; }
+    .b4{ animation:drift4 24s ease-in-out infinite; }
+
+    /* grain / noise overlay */
+    .grain{
+      position:fixed;
+      inset:-30%;
+      z-index:-1;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)' opacity='.30'/%3E%3C/svg%3E");
+      opacity:0.12;
+      mix-blend-mode: overlay;
+      pointer-events:none;
+      transform: rotate(2deg);
+    }
+
+    /* vignette */
+    .vignette{
+      position:fixed;
+      inset:0;
+      z-index:-1;
+      pointer-events:none;
+      background: radial-gradient(1200px 800px at 50% 40%, transparent 40%, rgba(0,0,0,0.65) 100%);
+    }
+
+    /* ===== Layout ===== */
+    .wrap{max-width:1100px;margin:0 auto;padding:28px 20px 80px;}
+    header{
+      position:sticky; top:0;
+      backdrop-filter: blur(14px);
+      background: linear-gradient(to bottom, rgba(10,10,12,0.75), rgba(10,10,12,0.25));
+      border-bottom:1px solid rgba(255,255,255,0.06);
+      z-index:10;
+    }
+    .nav{
+      max-width:1100px;margin:0 auto;padding:14px 20px;
+      display:flex;align-items:center;justify-content:space-between;gap:14px;
+    }
+    .brand{
+      display:flex;align-items:center;gap:10px;
+      text-decoration:none;color:var(--text);
+      letter-spacing:0.06em;
+      font-weight:700;
+    }
+    .dot{
+      width:10px;height:10px;border-radius:999px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.75), rgba(214,168,92,0.65));
+      box-shadow: 0 0 18px rgba(214,168,92,0.22);
+    }
+    .links{display:flex;gap:14px;flex-wrap:wrap;justify-content:flex-end}
+    .links a{
+      color:var(--muted);text-decoration:none;font-weight:600;font-size:14px;
+      padding:8px 10px;border-radius:12px;
+      border:1px solid transparent;
+      transition: 180ms ease;
+    }
+    .links a:hover{
+      color:var(--text);
+      background:rgba(255,255,255,0.04);
+      border-color:rgba(255,255,255,0.08);
+    }
+
+    /* ===== Hero ===== */
+    .hero{padding:70px 0 30px;display:grid;grid-template-columns: 1.2fr 0.8fr;gap:24px;align-items:center}
+    @media (max-width: 900px){ .hero{grid-template-columns:1fr;padding-top:48px} }
+
+    .kicker{
+      color:var(--muted);
+      font-weight:700;
+      letter-spacing:0.18em;
+      text-transform:uppercase;
+      font-size:12px;
+    }
+    h1{
+      margin:12px 0 10px;
+      font-size: clamp(34px, 5vw, 58px);
+      line-height:1.02;
+      letter-spacing:-0.02em;
+    }
+    .sub{
+      color:var(--muted);
+      font-size:16px;
+      line-height:1.6;
+      max-width:60ch;
+      margin:0 0 18px;
+    }
+
+    .ctaRow{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
+    .btn{
+      appearance:none;border:none;cursor:pointer;
+      padding:12px 14px;border-radius:16px;
+      font-weight:700;
+      text-decoration:none;
+      display:inline-flex;align-items:center;gap:10px;
+      transition: 180ms ease;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.06);
+      color:var(--text);
+    }
+    .btn:hover{ transform: translateY(-1px); background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.14); }
+    .btn.primary{
+      background: linear-gradient(135deg, rgba(214,168,92,0.20), rgba(255,255,255,0.06));
+      border-color: rgba(214,168,92,0.28);
+      box-shadow: 0 0 40px rgba(214,168,92,0.10);
+    }
+    .btn.primary:hover{ border-color: rgba(214,168,92,0.40); box-shadow: 0 0 50px rgba(214,168,92,0.16); }
+
+    .card3d{
+      position:relative;
+      border-radius:24px;
+      border:1px solid rgba(255,255,255,0.12);
+      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+      overflow:hidden;
+      min-height:280px;
+      padding:18px;
+    }
+    .card3d:before{
+      content:"";
+      position:absolute;inset:-2px;
+      background: radial-gradient(400px 260px at var(--mx,50%) var(--my,30%), rgba(214,168,92,0.18), transparent 55%);
+      opacity:0.9;
+      pointer-events:none;
+    }
+    .chrome{
+      position:absolute;
+      inset:auto 14px 14px 14px;
+      height:160px;
+      border-radius:20px;
+      background:
+        radial-gradient(120px 120px at 30% 35%, rgba(255,255,255,0.85), transparent 60%),
+        radial-gradient(160px 120px at 70% 55%, rgba(214,168,92,0.65), transparent 65%),
+        linear-gradient(135deg, rgba(255,255,255,0.25), rgba(255,255,255,0.02));
+      filter: blur(0.2px);
+      border:1px solid rgba(255,255,255,0.10);
+      box-shadow: inset 0 0 40px rgba(0,0,0,0.35);
+      transform: translateZ(0);
+    }
+    .chromeLabel{
+      position:absolute; top:16px; right:16px;
+      font-size:12px; color:rgba(255,255,255,0.75);
+      padding:8px 10px;border-radius:999px;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.18);
+      backdrop-filter: blur(10px);
+    }
+    .card3d h3{margin:0 0 8px;font-size:16px;letter-spacing:0.02em}
+    .card3d p{margin:0;color:var(--muted);line-height:1.6;font-size:14px;max-width:42ch}
+
+    /* ===== Sections ===== */
+    section{padding:26px 0}
+    .sectionTitle{
+      display:flex;align-items:flex-end;justify-content:space-between;gap:12px;
+      margin:18px 0 14px;
+    }
+    .sectionTitle h2{margin:0;font-size:18px;letter-spacing:0.04em;text-transform:uppercase}
+    .sectionTitle span{color:var(--muted2);font-size:13px}
+
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap:14px;
+    }
+    .panel{
+      grid-column: span 6;
+      border-radius:22px;
+      border:1px solid rgba(255,255,255,0.10);
+      background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.03));
+      padding:16px;
+      position:relative;
+      overflow:hidden;
+    }
+    .panel:hover{ border-color: rgba(255,255,255,0.14); }
+    .panel h3{margin:0 0 6px;font-size:16px}
+    .panel p{margin:0;color:var(--muted);line-height:1.6;font-size:14px}
+    .meta{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
+    .tag{
+      font-size:12px;
+      color:rgba(255,255,255,0.80);
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.18);
+      padding:6px 10px;border-radius:999px;
+    }
+    .panel a{color:var(--text);text-decoration:none;font-weight:700}
+    .panel a:hover{text-decoration:underline}
+
+    @media (max-width: 900px){
+      .panel{grid-column:span 12}
+    }
+
+    .timeline{
+      border-left: 1px solid rgba(255,255,255,0.14);
+      padding-left:14px;
+      display:grid; gap:14px;
+    }
+    .tItem{
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.04);
+      padding:14px;
+    }
+    .tTop{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .tTop strong{letter-spacing:0.02em}
+    .tTop span{color:var(--muted2);font-size:13px}
+    .tItem p{margin:10px 0 0;color:var(--muted);line-height:1.6;font-size:14px}
+
+    footer{
+      margin-top:34px;
+      padding-top:18px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;
+      color:var(--muted);
+      font-size:14px;
+    }
+    footer a{color:var(--text);text-decoration:none;font-weight:700}
+    footer a:hover{text-decoration:underline}
+
+    /* smooth anchor scrolling */
+    html { scroll-behavior: smooth; }
+
+    /* selection */
+    ::selection{ background: rgba(214,168,92,0.35); color: var(--text); }
+  </style>
 </head>
 <body>
-    <header>
-        <h1>Welcome to My Portfolio</h1>
-    </header>
-    <section>
-        <h2>About Me</h2>
-        <p>This is a brief introduction about myself.</p>
+  <div class="bg"></div>
+  <div class="mesh" aria-hidden="true">
+    <div class="blob b1"></div>
+    <div class="blob b2"></div>
+    <div class="blob b3"></div>
+    <div class="blob b4"></div>
+  </div>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="vignette" aria-hidden="true"></div>
+
+  <header>
+    <div class="nav">
+      <a class="brand" href="#top" aria-label="Home">
+        <span class="dot"></span>
+        <span>AAYUSH</span>
+      </a>
+      <nav class="links" aria-label="Primary">
+        <a href="#projects">Projects</a>
+        <a href="#experience">Experience</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top" class="wrap">
+    <section class="hero">
+      <div>
+        <div class="kicker">ALTER EGO PORTFOLIO</div>
+        <h1>Build systems.<br/>Leave no weak links.</h1>
+        <p class="sub">
+          Mechanical Engineering student focused on mechatronics, design, and clean execution.
+          Dark aesthetic. Clear outcomes.
+        </p>
+        <div class="ctaRow">
+          <a class="btn primary" href="#projects">View Projects</a>
+          <a class="btn" href="#contact">Contact</a>
+          <a class="btn" href="https://github.com/" target="_blank" rel="noreferrer">GitHub</a>
+        </div>
+      </div>
+
+      <aside class="card3d" id="tiltCard" aria-label="Signature card">
+        <div class="chromeLabel">COSMIC CHROME</div>
+        <h3>Signature</h3>
+        <p>
+          Minimal. Metallic. Controlled. This layout is built to keep the gradient quiet
+          and the content sharp.
+        </p>
+        <div class="chrome"></div>
+      </aside>
     </section>
-    <section>
+
+    <section id="projects">
+      <div class="sectionTitle">
         <h2>Projects</h2>
-        <ul>
-            <li>Project 1</li>
-            <li>Project 2</li>
-        </ul>
+        <span>Selected work</span>
+      </div>
+
+      <div class="grid">
+        <article class="panel">
+          <h3>Autonomous Sorting Robot</h3>
+          <p>
+            Closed-loop path navigation, material identification, and bin transport logic
+            for a mobile processing workflow.
+          </p>
+          <div class="meta">
+            <span class="tag">Mechatronics</span>
+            <span class="tag">Controls</span>
+            <span class="tag">Prototype</span>
+          </div>
+        </article>
+
+        <article class="panel">
+          <h3>F1 Aero + CAD Exploration</h3>
+          <p>
+            Modular CAD workflow for front wing, sidepods, and rear aero — focused on
+            performance-driven design.
+          </p>
+          <div class="meta">
+            <span class="tag">CAD</span>
+            <span class="tag">Aero</span>
+            <span class="tag">Simulation</span>
+          </div>
+        </article>
+
+        <article class="panel">
+          <h3>Submittal / Spec Extraction Automation</h3>
+          <p>
+            Streamlined document parsing workflows into structured outputs for faster
+            review and tracking.
+          </p>
+          <div class="meta">
+            <span class="tag">Automation</span>
+            <span class="tag">Documentation</span>
+            <span class="tag">Process</span>
+          </div>
+        </article>
+
+        <article class="panel">
+          <h3>Portfolio System (This Site)</h3>
+          <p>
+            Dark cyber-futurist layout with a 4-point mesh gradient, grain overlay, and
+            controlled motion.
+          </p>
+          <div class="meta">
+            <span class="tag">HTML</span>
+            <span class="tag">CSS</span>
+            <span class="tag">GitHub Pages</span>
+          </div>
+        </article>
+      </div>
     </section>
+
+    <section id="experience">
+      <div class="sectionTitle">
+        <h2>Experience</h2>
+        <span>Timeline</span>
+      </div>
+
+      <div class="timeline">
+        <div class="tItem">
+          <div class="tTop">
+            <strong>Project / Engineering Intern</strong>
+            <span>Dallas–Fort Worth • 2025–2026</span>
+          </div>
+          <p>
+            Worked on structured documentation workflows, coordination, and clean execution.
+            Focus: speed + accuracy.
+          </p>
+        </div>
+
+        <div class="tItem">
+          <div class="tTop">
+            <strong>Mechanical Engineering (Undergrad)</strong>
+            <span>University of Cincinnati</span>
+          </div>
+          <p>
+            Design, analysis, and systems thinking. Building a portfolio that looks like
+            discipline — not decoration.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="about">
+      <div class="sectionTitle">
+        <h2>About</h2>
+        <span>Short + direct</span>
+      </div>
+
+      <div class="grid">
+        <article class="panel" style="grid-column: span 7;">
+          <h3>Identity</h3>
+          <p>
+            I like hard problems: design tradeoffs, systems that fail in real life, and
+            making things cleaner than they started.
+          </p>
+          <div class="meta">
+            <span class="tag">Prudence</span>
+            <span class="tag">Hope</span>
+            <span class="tag">Discipline</span>
+          </div>
+        </article>
+
+        <article class="panel" style="grid-column: span 5;">
+          <h3>Tools</h3>
+          <p>SolidWorks • Siemens NX • Ansys • Blender • Excel • Canva</p>
+          <div class="meta">
+            <span class="tag">CAD</span>
+            <span class="tag">Sim</span>
+            <span class="tag">Design</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="sectionTitle">
+        <h2>Contact</h2>
+        <span>Keep it simple</span>
+      </div>
+
+      <div class="grid">
+        <article class="panel" style="grid-column: span 12;">
+          <h3>Let’s talk</h3>
+          <p>
+            Email: <a href="mailto:your.email@example.com">your.email@example.com</a>
+            &nbsp;•&nbsp; LinkedIn: <a href="#" target="_blank" rel="noreferrer">add link</a>
+            &nbsp;•&nbsp; GitHub: <a href="#" target="_blank" rel="noreferrer">add link</a>
+          </p>
+          <div class="meta">
+            <span class="tag">Open to co-ops</span>
+            <span class="tag">Spring 2026</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
     <footer>
-        <p>Contact: email@example.com</p>
+      <div>© <span id="year"></span> Aayush Layane</div>
+      <div>Dark cyber futurism • cosmic chrome</div>
     </footer>
+  </main>
+
+  <script>
+    // Year
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // Subtle mouse light on the signature card
+    const card = document.getElementById("tiltCard");
+    card.addEventListener("mousemove", (e) => {
+      const r = card.getBoundingClientRect();
+      const mx = ((e.clientX - r.left) / r.width) * 100;
+      const my = ((e.clientY - r.top) / r.height) * 100;
+      card.style.setProperty("--mx", mx + "%");
+      card.style.setProperty("--my", my + "%");
+    });
+  </script>
 </body>
 </html>
