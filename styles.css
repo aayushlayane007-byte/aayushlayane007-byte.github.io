@@ -33,51 +33,74 @@ body{
   line-height: 1.5;
   overflow-x: hidden;
 }
-
 /* =========================
-   Signature background (Y2K liquid light)
+   Signature background (Chrome wave + sheen)
    ========================= */
 body::before{
   content:"";
   position: fixed;
-  inset: -20vmax;
+  inset: -35vmax;
   z-index: -2;
 
+  /* Chrome-like diagonal wave band + soft ambient color */
   background:
-    radial-gradient(40vmax 35vmax at 15% 20%, color-mix(in oklab, var(--a2), transparent 55%), transparent 60%),
-    radial-gradient(45vmax 40vmax at 85% 15%, color-mix(in oklab, var(--a4), transparent 55%), transparent 62%),
-    radial-gradient(45vmax 40vmax at 70% 85%, color-mix(in oklab, var(--a3), transparent 60%), transparent 65%),
-    radial-gradient(55vmax 45vmax at 20% 85%, color-mix(in oklab, var(--a1), transparent 65%), transparent 68%);
-  filter: blur(30px) saturate(1.15);
-  opacity: .9;
+    conic-gradient(from 220deg at 30% 40%,
+      transparent 0 10%,
+      color-mix(in oklab, var(--a2), transparent 55%) 12%,
+      color-mix(in oklab, var(--a4), transparent 60%) 18%,
+      color-mix(in oklab, var(--a3), transparent 62%) 25%,
+      transparent 35% 100%
+    ),
+    radial-gradient(70vmax 55vmax at 15% 85%,
+      color-mix(in oklab, var(--a1), transparent 75%),
+      transparent 60%
+    ),
+    radial-gradient(75vmax 60vmax at 90% 15%,
+      color-mix(in oklab, var(--a3), transparent 78%),
+      transparent 62%
+    );
 
-  animation: floatGlow 14s ease-in-out infinite alternate;
+  filter: blur(26px) saturate(1.25);
+  opacity: .95;
+
+  /* slow “drift” so it feels alive, not obvious */
+  animation: chromeDrift 18s ease-in-out infinite alternate;
 }
 
 body::after{
-  /* subtle grain to avoid “flat” look */
   content:"";
   position: fixed;
   inset: 0;
   z-index: -1;
   pointer-events: none;
+
+  /* metallic sheen + micro grain */
   background:
-    repeating-linear-gradient(
-      0deg,
-      rgba(255,255,255,.03) 0px,
-      rgba(255,255,255,.03) 1px,
-      transparent 2px,
-      transparent 4px
-    );
-  opacity: .25;
+    linear-gradient(115deg,
+      rgba(255,255,255,.08),
+      rgba(255,255,255,0) 35%,
+      rgba(255,255,255,.06) 55%,
+      rgba(255,255,255,0) 70%,
+      rgba(255,255,255,.07)
+    ),
+    radial-gradient(circle at 30% 20%, rgba(255,255,255,.07), transparent 35%),
+    radial-gradient(circle at 70% 80%, rgba(255,255,255,.05), transparent 40%);
+
   mix-blend-mode: overlay;
+  opacity: .28;
+
+  animation: sheenMove 10s ease-in-out infinite alternate;
 }
 
-@keyframes floatGlow{
-  0%   { transform: translate3d(-1.5%, -1.0%, 0) scale(1.00); }
-  100% { transform: translate3d( 1.5%,  1.0%, 0) scale(1.04); }
+@keyframes chromeDrift{
+  0%   { transform: translate3d(-1.2%, 1.0%, 0) rotate(-6deg) scale(1.02); }
+  100% { transform: translate3d( 1.2%, -1.0%, 0) rotate( 6deg) scale(1.05); }
 }
 
+@keyframes sheenMove{
+  0%   { transform: translate3d(-1.0%, 0.0%, 0); }
+  100% { transform: translate3d( 1.0%, 0.0%, 0); }
+}
 /* =========================
    Layout
    ========================= */
