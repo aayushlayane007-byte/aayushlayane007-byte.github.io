@@ -1,1 +1,171 @@
 
+/* =========================
+   Design Tokens (edit these)
+   ========================= */
+:root{
+  --bg: #07070b;               /* main dark */
+  --panel: rgba(255,255,255,.06);
+  --panel-strong: rgba(255,255,255,.10);
+  --text: rgba(255,255,255,.88);
+  --muted: rgba(255,255,255,.62);
+  --border: rgba(255,255,255,.12);
+
+  /* “Iridescent” accent set (blue/purple/pink/indigo) */
+  --a1: #6d6bff;   /* indigo */
+  --a2: #49d6ff;   /* cyan */
+  --a3: #ff4fd8;   /* pink */
+  --a4: #b86bff;   /* violet */
+
+  --maxw: 1060px;
+  --radius: 18px;
+}
+
+/* =========================
+   Base reset
+   ========================= */
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body{
+  margin: 0;
+  color: var(--text);
+  background: var(--bg);
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+/* =========================
+   Signature background (Y2K liquid light)
+   ========================= */
+body::before{
+  content:"";
+  position: fixed;
+  inset: -20vmax;
+  z-index: -2;
+
+  background:
+    radial-gradient(40vmax 35vmax at 15% 20%, color-mix(in oklab, var(--a2), transparent 55%), transparent 60%),
+    radial-gradient(45vmax 40vmax at 85% 15%, color-mix(in oklab, var(--a4), transparent 55%), transparent 62%),
+    radial-gradient(45vmax 40vmax at 70% 85%, color-mix(in oklab, var(--a3), transparent 60%), transparent 65%),
+    radial-gradient(55vmax 45vmax at 20% 85%, color-mix(in oklab, var(--a1), transparent 65%), transparent 68%);
+  filter: blur(30px) saturate(1.15);
+  opacity: .9;
+
+  animation: floatGlow 14s ease-in-out infinite alternate;
+}
+
+body::after{
+  /* subtle grain to avoid “flat” look */
+  content:"";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      rgba(255,255,255,.03) 0px,
+      rgba(255,255,255,.03) 1px,
+      transparent 2px,
+      transparent 4px
+    );
+  opacity: .25;
+  mix-blend-mode: overlay;
+}
+
+@keyframes floatGlow{
+  0%   { transform: translate3d(-1.5%, -1.0%, 0) scale(1.00); }
+  100% { transform: translate3d( 1.5%,  1.0%, 0) scale(1.04); }
+}
+
+/* =========================
+   Layout
+   ========================= */
+header, main, footer{
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 22px 18px;
+}
+
+header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+h1{
+  margin: 0;
+  font-size: 18px;
+  letter-spacing: .2px;
+  font-weight: 650;
+}
+
+/* Chrome-ish highlight for the name */
+h1{
+  background: linear-gradient(90deg, var(--text), color-mix(in oklab, var(--a2), white 30%), color-mix(in oklab, var(--a3), white 25%), var(--text));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+nav{
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+nav a{
+  text-decoration: none;
+  color: var(--muted);
+  padding: 8px 10px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  transition: transform .18s ease, background .18s ease, border-color .18s ease, color .18s ease;
+}
+
+nav a:hover{
+  color: var(--text);
+  background: rgba(255,255,255,.05);
+  border-color: rgba(255,255,255,.10);
+  transform: translateY(-1px);
+}
+
+main{
+  padding-top: 34px;
+}
+
+h2{
+  margin: 0 0 10px 0;
+  font-size: 34px;
+  line-height: 1.1;
+  letter-spacing: -.4px;
+}
+
+p{
+  margin: 0 0 14px 0;
+  color: var(--muted);
+  max-width: 68ch;
+}
+
+/* “Glass card” utility (we’ll use this next step) */
+.card{
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+footer{
+  padding-bottom: 34px;
+  color: rgba(255,255,255,.5);
+  font-size: 14px;
+}
+
+/* Mobile tweaks */
+@media (max-width: 640px){
+  header{ flex-direction: column; align-items: flex-start; }
+  h2{ font-size: 28px; }
+}
