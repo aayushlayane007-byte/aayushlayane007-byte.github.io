@@ -169,54 +169,72 @@ p{
   -webkit-backdrop-filter: blur(10px);
 }
 
-/* Chrome enhancement layer */
+/* =========================
+   PROMINENT Chrome layer (LOUD)
+   ========================= */
 .card{
   position: relative;
   overflow: hidden;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.14),
+    0 0 30px rgba(73,214,255,.18),
+    0 0 44px rgba(255,79,216,.12);
 }
 
+/* big chrome frame */
 .card::before{
   content:"";
-  position:absolute;
-  inset:-1px;
+  position: absolute;
+  inset: 0;
   border-radius: inherit;
-  padding: 1px;
+  pointer-events: none;
+
+  /* a thick “chrome rim” */
+  padding: 2px;
   background: linear-gradient(135deg,
-    rgba(255,255,255,.18),
-    rgba(255,255,255,0) 35%,
-    rgba(73,214,255,.22) 55%,
-    rgba(255,79,216,.20) 72%,
-    rgba(255,255,255,.12)
+    rgba(255,255,255,.55),
+    rgba(255,255,255,.08) 18%,
+    rgba(73,214,255,.55) 42%,
+    rgba(255,79,216,.50) 64%,
+    rgba(255,255,255,.40)
   );
+
+  /* cut out the inside so it becomes a border */
   -webkit-mask:
     linear-gradient(#000 0 0) content-box,
     linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
-  opacity: .9;
+
+  opacity: 1;
 }
 
+/* very visible moving specular sweep */
 .card::after{
   content:"";
-  position:absolute;
-  inset:0;
+  position: absolute;
+  inset: -40% -60%;
+  pointer-events: none;
+
   background: linear-gradient(115deg,
     rgba(255,255,255,0) 0%,
-    rgba(255,255,255,.10) 18%,
-    rgba(255,255,255,0) 40%,
-    rgba(255,255,255,.06) 58%,
-    rgba(255,255,255,0) 80%
+    rgba(255,255,255,.85) 18%,
+    rgba(255,255,255,0) 34%,
+    rgba(255,255,255,.45) 50%,
+    rgba(255,255,255,0) 70%
   );
-  transform: translateX(-20%);
-  opacity: .55;
-  mix-blend-mode: overlay;
-  pointer-events:none;
-  animation: specSweep 7s ease-in-out infinite alternate;
+
+  filter: blur(2px);
+  opacity: .75;
+  mix-blend-mode: screen;
+
+  transform: translateX(-25%) rotate(10deg);
+  animation: specSweepLOUD 3.6s ease-in-out infinite alternate;
 }
 
-@keyframes specSweep{
-  0%   { transform: translateX(-22%); }
-  100% { transform: translateX(22%); }
+@keyframes specSweepLOUD{
+  0%   { transform: translateX(-28%) rotate(10deg); }
+  100% { transform: translateX(28%) rotate(10deg); }
 }
 
 footer{
