@@ -103,7 +103,7 @@ body{
 
   /* This is the KEY for the “floor” look */
   transform-origin: 50% 100%;
-  transform: perspective(720px) rotateX(68deg) translateY(22vh) scale(1.25);
+transform: perspective(720px) rotateX(68deg) translateY(22vh) scale(1.8, 1.25);
 
   /* Make it pop like the reference */
   filter: blur(.0px) saturate(1.25);
