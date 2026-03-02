@@ -83,12 +83,6 @@ body{
   */
   background:
     /* horizon glow band */
-    radial-gradient(1100px 300px at 50% 58%,
-      var(--glowA) 0%,
-      var(--glowB) 35%,
-      var(--glowC) 60%,
-      transparent 72%
-    ),
 
     /* grid vertical lines */
     repeating-linear-gradient(
