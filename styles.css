@@ -39,31 +39,37 @@ body{
 body::before{
   content:"";
   position: fixed;
-  inset: -35vmax;
+  inset: -45vmax;     /* bigger canvas so it covers everywhere */
   z-index: -2;
 
-  /* Chrome-like diagonal wave band + soft ambient color */
   background:
-    conic-gradient(from 220deg at 30% 40%,
-      transparent 0 10%,
-      color-mix(in oklab, var(--a2), transparent 55%) 12%,
-      color-mix(in oklab, var(--a4), transparent 60%) 18%,
-      color-mix(in oklab, var(--a3), transparent 62%) 25%,
-      transparent 35% 100%
-    ),
-    radial-gradient(70vmax 55vmax at 15% 85%,
-      color-mix(in oklab, var(--a1), transparent 75%),
-      transparent 60%
-    ),
-    radial-gradient(75vmax 60vmax at 90% 15%,
-      color-mix(in oklab, var(--a3), transparent 78%),
-      transparent 62%
+    /* left nebula */
+    radial-gradient(60vmax 50vmax at 12% 30%, rgba(109,107,255,.38), transparent 62%),
+    radial-gradient(55vmax 45vmax at 22% 72%, rgba(73,214,255,.22), transparent 64%),
+
+    /* right nebula */
+    radial-gradient(62vmax 52vmax at 88% 22%, rgba(255,79,216,.18), transparent 65%),
+    radial-gradient(70vmax 58vmax at 82% 78%, rgba(184,107,255,.18), transparent 66%),
+
+    /* center haze (Milky Way-ish, very soft) */
+    radial-gradient(70vmax 55vmax at 52% 50%, rgba(255,255,255,.06), transparent 60%),
+
+    /* faint diagonal band so it feels like it flows */
+    linear-gradient(125deg,
+      transparent 0%,
+      rgba(255,255,255,.04) 40%,
+      rgba(255,255,255,.02) 55%,
+      transparent 70%
     );
 
-  filter: blur(26px) saturate(1.25);
+  filter: blur(30px) saturate(1.25);
   opacity: .95;
+  animation: nebulaDrift 18s ease-in-out infinite alternate;
+}
 
-  animation: chromeDrift 18s ease-in-out infinite alternate;
+@keyframes nebulaDrift{
+  0%   { transform: translate3d(-1.2%, 1.0%, 0) rotate(-4deg) scale(1.03); }
+  100% { transform: translate3d( 1.2%, -1.0%, 0) rotate( 4deg) scale(1.06); }
 }
 
 body::after{
