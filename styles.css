@@ -1,130 +1,188 @@
-/* ============================= */
-/* RESET */
-/* ============================= */
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+/* ====== RESET ====== */
+*{ margin:0; padding:0; box-sizing:border-box; }
+html,body{ height:100%; }
+body{
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+  color: rgba(255,255,255,.92);
+  background:#05060b;
+  overflow-x:hidden;
 }
 
-html, body {
-  height: 100%;
-  font-family: 'Inter', sans-serif;
-  background: #050510;
-  color: white;
-  overflow-x: hidden;
-}
+/* ====== STARFIELD (background) ====== */
+body::before{
+  content:"";
+  position: fixed;
+  inset: 0;
+  z-index: -3;
+  pointer-events:none;
 
-/* ============================= */
-/* MAIN LAYOUT */
-/* ============================= */
-
-body {
-  position: relative;
-  min-height: 100vh;
+  /* starfield + subtle vignette */
   background:
-    radial-gradient(1200px 800px at 20% 30%, rgba(0,255,200,0.15), transparent 70%),
-    radial-gradient(1200px 800px at 80% 70%, rgba(255,0,200,0.15), transparent 70%),
-    radial-gradient(1000px 600px at 50% 50%, rgba(100,0,255,0.12), transparent 70%),
-    #050510;
+    radial-gradient(circle at 20% 25%, rgba(255,255,255,.9) 0 1px, transparent 2px),
+    radial-gradient(circle at 35% 15%, rgba(255,255,255,.7) 0 1px, transparent 2px),
+    radial-gradient(circle at 60% 22%, rgba(255,255,255,.75) 0 1px, transparent 2px),
+    radial-gradient(circle at 78% 18%, rgba(255,255,255,.65) 0 1px, transparent 2px),
+    radial-gradient(circle at 88% 35%, rgba(255,255,255,.75) 0 1px, transparent 2px),
+    radial-gradient(circle at 12% 48%, rgba(255,255,255,.6) 0 1px, transparent 2px),
+    radial-gradient(circle at 52% 42%, rgba(255,255,255,.65) 0 1px, transparent 2px),
+    radial-gradient(circle at 70% 55%, rgba(255,255,255,.55) 0 1px, transparent 2px),
+    radial-gradient(circle at 92% 58%, rgba(255,255,255,.6) 0 1px, transparent 2px),
+
+    /* faint grainy space haze */
+    radial-gradient(1200px 700px at 50% 20%, rgba(255,255,255,.06), transparent 65%),
+    radial-gradient(900px 700px at 10% 40%, rgba(73,214,255,.08), transparent 70%),
+    radial-gradient(900px 700px at 90% 50%, rgba(255,79,216,.07), transparent 70%),
+
+    /* vignette */
+    radial-gradient(1200px 900px at 50% 50%, transparent 40%, rgba(0,0,0,.55) 100%);
+
+  opacity: 1;
 }
 
-/* ============================= */
-/* RETRO GRID FLOOR */
-/* ============================= */
-
-body::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 40vh;
-  pointer-events: none;
-
-  background:
-    linear-gradient(to top, rgba(0,255,255,0.15), transparent 60%),
-    repeating-linear-gradient(
-      to right,
-      rgba(0,255,255,0.15) 0px,
-      rgba(0,255,255,0.15) 1px,
-      transparent 1px,
-      transparent 60px
-    ),
-    repeating-linear-gradient(
-      to top,
-      rgba(0,255,255,0.15) 0px,
-      rgba(0,255,255,0.15) 1px,
-      transparent 1px,
-      transparent 60px
-    );
-
-  transform: perspective(600px) rotateX(65deg);
-  transform-origin: bottom;
+/* ====== LAYOUT ====== */
+header, main, footer{
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 26px 20px;
 }
 
-/* ============================= */
-/* NAVIGATION */
-/* ============================= */
-
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 30px 60px;
+header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 16px;
 }
 
-header h1 {
-  font-size: 20px;
-  font-weight: 600;
-}
-
-header h1 span {
-  background: linear-gradient(90deg, #00ffff, #ff00ff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-nav a {
-  color: rgba(255,255,255,0.7);
-  text-decoration: none;
-  margin-left: 25px;
-  font-size: 14px;
-  transition: 0.3s;
-}
-
-nav a:hover {
-  color: white;
-}
-
-/* ============================= */
-/* HERO SECTION */
-/* ============================= */
-
-main {
-  padding: 100px 60px;
-  max-width: 900px;
-}
-
-main h2 {
-  font-size: 48px;
-  margin-bottom: 20px;
-}
-
-main p {
+h1{
   font-size: 18px;
-  color: rgba(255,255,255,0.7);
-  margin-bottom: 20px;
+  font-weight: 650;
+  letter-spacing: .2px;
 }
 
-/* ============================= */
-/* FOOTER */
-/* ============================= */
+nav{
+  display:flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
 
-footer {
-  position: relative;
-  padding: 40px 60px;
-  color: rgba(255,255,255,0.5);
+nav a{
+  color: rgba(255,255,255,.70);
+  text-decoration:none;
   font-size: 14px;
+}
+nav a:hover{ color: rgba(255,255,255,.95); }
+
+main{ padding-top: 40px; }
+
+h2{
+  font-size: 44px;
+  line-height: 1.1;
+  margin-bottom: 12px;
+}
+
+p{
+  color: rgba(255,255,255,.65);
+  max-width: 70ch;
+  margin-bottom: 14px;
+}
+
+/* simple glass card (optional) */
+.card{
+  margin-top: 18px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 18px;
+  padding: 18px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+footer{
+  color: rgba(255,255,255,.55);
+  font-size: 14px;
+  padding-bottom: 40px;
+}
+
+/* ====== RETRO GRID FLOOR ======
+   Put <div class="grid"></div> right after <body>
+*/
+.grid{
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: -12vh;
+  height: 70vh;
+  z-index: -2;
+  pointer-events:none;
+
+  transform-origin: bottom center;
+  transform: perspective(620px) rotateX(67deg);
+
+  /* fade into distance (horizon) */
+  -webkit-mask-image: linear-gradient(to top,
+    rgba(0,0,0,1) 0%,
+    rgba(0,0,0,1) 25%,
+    rgba(0,0,0,.55) 55%,
+    rgba(0,0,0,0) 100%);
+  mask-image: linear-gradient(to top,
+    rgba(0,0,0,1) 0%,
+    rgba(0,0,0,1) 25%,
+    rgba(0,0,0,.55) 55%,
+    rgba(0,0,0,0) 100%);
+}
+
+/* Horizon glow + grid lines */
+.grid::before{
+  content:"";
+  position:absolute;
+  inset:0;
+
+  /* neon glow band at horizon + depth tint */
+  background:
+    radial-gradient(closest-side at 50% 18%,
+      rgba(73,214,255,.55),
+      rgba(73,214,255,.18) 45%,
+      rgba(255,79,216,.10) 60%,
+      transparent 72%),
+
+    /* vertical grid lines */
+    repeating-linear-gradient(to right,
+      rgba(73,214,255,.45) 0 2px,
+      transparent 2px 70px),
+
+    /* horizontal grid lines */
+    repeating-linear-gradient(to top,
+      rgba(73,214,255,.45) 0 2px,
+      transparent 2px 62px);
+
+  filter: drop-shadow(0 0 14px rgba(73,214,255,.55))
+          drop-shadow(0 0 26px rgba(73,214,255,.25));
+  opacity: .95;
+
+  /* moving grid */
+  animation: gridMove 1.9s linear infinite;
+}
+
+/* extra horizon line (crisp) */
+.grid::after{
+  content:"";
+  position:absolute;
+  left:-10%;
+  right:-10%;
+  top: 14%;
+  height: 3px;
+  background: rgba(73,214,255,.65);
+  box-shadow: 0 0 18px rgba(73,214,255,.55);
+  opacity: .75;
+}
+
+@keyframes gridMove{
+  0%   { background-position: 0 0, 0 0, 0 0; }
+  100% { background-position: 0 0, 0 0, 0 140px; }
+}
+
+/* Mobile */
+@media (max-width: 640px){
+  header{ flex-direction: column; align-items:flex-start; }
+  h2{ font-size: 32px; }
 }
