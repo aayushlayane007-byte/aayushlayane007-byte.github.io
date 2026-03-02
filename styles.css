@@ -1,16 +1,14 @@
-
 /* =========================
    Design Tokens (edit these)
    ========================= */
 :root{
-  --bg: #07070b;               /* main dark */
+  --bg: #07070b;
   --panel: rgba(255,255,255,.06);
-  --panel-strong: rgba(255,255,255,.10);
-  --text: rgba(255,255,255,.88);
+  --text: rgba(255,255,255,.90);
   --muted: rgba(255,255,255,.62);
   --border: rgba(255,255,255,.12);
 
-  /* “Iridescent” accent set (blue/purple/pink/indigo) */
+  /* Accent set (blue/purple/pink/indigo) */
   --a1: #6d6bff;   /* indigo */
   --a2: #49d6ff;   /* cyan */
   --a3: #ff4fd8;   /* pink */
@@ -23,24 +21,25 @@
 /* =========================
    Base reset
    ========================= */
-* { box-sizing: border-box; }
-html, body { height: 100%; }
+*{ box-sizing: border-box; }
+html, body{ height: 100%; }
 body{
   margin: 0;
-  color: var(--text);
   background: var(--bg);
+  color: var(--text);
   font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
   line-height: 1.5;
   overflow-x: hidden;
 }
+
 /* =========================
-   Signature background (floating glow — the one you liked)
+   Nebula environment (VISIBLE + spread)
    ========================= */
 body::before{
   content:"";
   position: fixed;
   inset: -45vmax;
-  z-index: -3;
+  z-index: -1;
   pointer-events: none;
 
   background:
@@ -52,74 +51,35 @@ body::before{
 
   filter: blur(28px) saturate(1.55);
   opacity: .98;
-
   animation: nebulaDrift 16s ease-in-out infinite alternate;
 }
 
-@keyframes waveDrift{
-  0%   { background-position: 45% 48%, 0 0, 0 0; transform: translate3d(-0.6%, 0.4%, 0) scale(1.02); }
-  100% { background-position: 55% 52%, 0 0, 0 0; transform: translate3d( 0.6%, -0.4%, 0) scale(1.05); }
+@keyframes nebulaDrift{
+  0%   { transform: translate3d(-1.2%, 1.0%, 0) rotate(-4deg) scale(1.03); }
+  100% { transform: translate3d( 1.2%, -1.0%, 0) rotate( 4deg) scale(1.06); }
 }
 
-/* =========================
-   Retro grid floor (80s horizon)
-   ========================= */
-.grid-floor{
+/* Subtle grain (does NOT kill nebula) */
+body::after{
+  content:"";
   position: fixed;
-  left: 0;
-  right: 0;
-  bottom: -6vh;
-  height: 46vh;
-  z-index: -1;
+  inset: 0;
+  z-index: -2;
   pointer-events: none;
 
-  transform-origin: bottom center;
-  transform: perspective(900px) rotateX(62deg);
-
-  /* glow + fade to horizon */
-  -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1), rgba(0,0,0,.55) 55%, rgba(0,0,0,0) 100%);
-  mask-image: linear-gradient(to top, rgba(0,0,0,1), rgba(0,0,0,.55) 55%, rgba(0,0,0,0) 100%);
-
-  filter: blur(.0px);
-  opacity: .75;
-}
-
-.grid-floor::before{
-  content:"";
-  position:absolute;
-  inset:0;
-
-  /* grid lines */
   background:
-    repeating-linear-gradient(to right, rgba(73,214,255,.20) 0 1px, transparent 1px 64px),
-    repeating-linear-gradient(to top,   rgba(73,214,255,.20) 0 1px, transparent 1px 56px);
+    repeating-linear-gradient(
+      0deg,
+      rgba(255,255,255,.028) 0px,
+      rgba(255,255,255,.028) 1px,
+      transparent 2px,
+      transparent 4px
+    );
 
-  /* neon haze */
-  box-shadow: 0 -30px 80px rgba(255,79,216,.22);
+  opacity: .12;
+  mix-blend-mode: normal;
 }
 
-.grid-floor::after{
-  content:"";
-  position:absolute;
-  left: -10%;
-  right: -10%;
-  top: -18%;
-  height: 28%;
-
-  /* horizon glow band */
-  background: radial-gradient(closest-side, rgba(255,79,216,.30), rgba(73,214,255,.18), transparent 70%);
-  filter: blur(10px);
-  opacity: .9;
-}
-
-/* slow grid “movement” */
-@keyframes gridMove{
-  0%   { background-position: 0 0, 0 0; }
-  100% { background-position: 0 0, 0 140px; }
-}
-.grid-floor::before{
-  animation: gridMove 2.8s linear infinite;
-}
 /* =========================
    Layout
    ========================= */
@@ -141,11 +101,9 @@ h1{
   font-size: 18px;
   letter-spacing: .2px;
   font-weight: 650;
-}
 
-/* Chrome-ish highlight for the name */
-h1{
-  background: linear-gradient(90deg, var(--text), color-mix(in oklab, var(--a2), white 30%), color-mix(in oklab, var(--a3), white 25%), var(--text));
+  /* slight iridescent hint on your name */
+  background: linear-gradient(90deg, var(--text), rgba(73,214,255,.9), rgba(255,79,216,.85), var(--text));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -190,7 +148,6 @@ p{
   max-width: 68ch;
 }
 
-/* “Glass card” utility (we’ll use this next step) */
 .card{
   background: var(--panel);
   border: 1px solid var(--border);
@@ -204,6 +161,59 @@ footer{
   padding-bottom: 34px;
   color: rgba(255,255,255,.5);
   font-size: 14px;
+}
+
+/* =========================
+   Retro grid floor (80s horizon)
+   NOTE: requires <div class="grid-floor"></div> in index.html
+   ========================= */
+.grid-floor{
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: -6vh;
+  height: 46vh;
+  z-index: -3;
+  pointer-events: none;
+
+  transform-origin: bottom center;
+  transform: perspective(900px) rotateX(62deg);
+
+  -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1), rgba(0,0,0,.55) 55%, rgba(0,0,0,0) 100%);
+  mask-image: linear-gradient(to top, rgba(0,0,0,1), rgba(0,0,0,.55) 55%, rgba(0,0,0,0) 100%);
+
+  opacity: .78;
+}
+
+.grid-floor::before{
+  content:"";
+  position:absolute;
+  inset:0;
+
+  background:
+    repeating-linear-gradient(to right, rgba(73,214,255,.22) 0 1px, transparent 1px 64px),
+    repeating-linear-gradient(to top,   rgba(73,214,255,.22) 0 1px, transparent 1px 56px);
+
+  box-shadow: 0 -30px 80px rgba(255,79,216,.18);
+  animation: gridMove 2.8s linear infinite;
+}
+
+.grid-floor::after{
+  content:"";
+  position:absolute;
+  left: -10%;
+  right: -10%;
+  top: -18%;
+  height: 28%;
+
+  background: radial-gradient(closest-side, rgba(255,79,216,.26), rgba(73,214,255,.16), transparent 70%);
+  filter: blur(10px);
+  opacity: .9;
+}
+
+@keyframes gridMove{
+  0%   { background-position: 0 0, 0 0; }
+  100% { background-position: 0 0, 0 140px; }
 }
 
 /* Mobile tweaks */
