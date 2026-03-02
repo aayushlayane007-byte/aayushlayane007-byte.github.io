@@ -88,14 +88,14 @@ body{
     repeating-linear-gradient(
       to right,
       var(--grid) 0 4px,
-      transparent 4px 110px
+      transparent 4px 90px
     ),
 
     /* grid horizontal lines */
     repeating-linear-gradient(
       to bottom,
       var(--grid) 0 4px,
-      transparent 4px 110px
+      transparent 4px 90px
     ),
 
     /* vignette (keeps edges dark like the reference) */
