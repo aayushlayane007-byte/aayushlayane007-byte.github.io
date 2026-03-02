@@ -8,7 +8,7 @@
   --muted: rgba(255,255,255,.66);
 
   /* grid colors */
-  --grid: rgba(0, 255, 255, .34);
+  --grid: #00ffff;
   --gridBold: rgba(0, 255, 255, .55);
 
   /* horizon glow */
@@ -106,8 +106,7 @@ body{
 transform: perspective(720px) rotateX(68deg) translateY(22vh) scale(1.8, 1.25);
 
   /* Make it pop like the reference */
-  filter: blur(.0px) saturate(1.25);
-  opacity: 1;
+filter: drop-shadow(0 0 6px #00ffff) drop-shadow(0 0 12px #00ffff);
 
   /* Animate the grid moving forward */
   animation: gridScroll 2.4s linear infinite;
