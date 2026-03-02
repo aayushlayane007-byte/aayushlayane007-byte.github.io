@@ -39,32 +39,33 @@ body{
 body::before{
   content:"";
   position: fixed;
-  inset: -45vmax;     /* bigger canvas so it covers everywhere */
+  inset: -45vmax;
   z-index: -2;
 
   background:
-    /* left nebula */
-    radial-gradient(60vmax 50vmax at 12% 30%, rgba(109,107,255,.38), transparent 62%),
-    radial-gradient(55vmax 45vmax at 22% 72%, rgba(73,214,255,.22), transparent 64%),
-
-    /* right nebula */
-    radial-gradient(62vmax 52vmax at 88% 22%, rgba(255,79,216,.18), transparent 65%),
-    radial-gradient(70vmax 58vmax at 82% 78%, rgba(184,107,255,.18), transparent 66%),
-
-    /* center haze (Milky Way-ish, very soft) */
-    radial-gradient(70vmax 55vmax at 52% 50%, rgba(255,255,255,.06), transparent 60%),
-
-    /* faint diagonal band so it feels like it flows */
+    /* Milky Way band (the main visual) */
     linear-gradient(125deg,
       transparent 0%,
-      rgba(255,255,255,.04) 40%,
-      rgba(255,255,255,.02) 55%,
-      transparent 70%
-    );
+      rgba(73,214,255,.14) 34%,
+      rgba(255,79,216,.12) 46%,
+      rgba(184,107,255,.10) 58%,
+      transparent 72%
+    ),
 
-  filter: blur(30px) saturate(1.25);
-  opacity: .95;
-  animation: nebulaDrift 18s ease-in-out infinite alternate;
+    /* left nebula (strong) */
+    radial-gradient(70vmax 58vmax at 8% 28%, rgba(109,107,255,.70), transparent 62%),
+    radial-gradient(62vmax 52vmax at 18% 78%, rgba(73,214,255,.42), transparent 64%),
+
+    /* right nebula (strong) */
+    radial-gradient(75vmax 60vmax at 92% 20%, rgba(255,79,216,.40), transparent 65%),
+    radial-gradient(82vmax 68vmax at 86% 84%, rgba(184,107,255,.38), transparent 66%),
+
+    /* center haze to connect everything */
+    radial-gradient(85vmax 70vmax at 52% 52%, rgba(255,255,255,.09), transparent 62%);
+
+  filter: blur(26px) saturate(1.65);
+  opacity: .98;
+  animation: nebulaDrift 16s ease-in-out infinite alternate;
 }
 
 @keyframes nebulaDrift{
