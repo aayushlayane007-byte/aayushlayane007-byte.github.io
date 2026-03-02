@@ -120,6 +120,66 @@ body::before{
 .grid-floor::before{
   animation: gridMove 2.8s linear infinite;
 }
+
+/* =========================
+   Retro grid floor (80s horizon)
+   ========================= */
+.grid-floor{
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: -6vh;
+  height: 46vh;
+  z-index: -1;
+  pointer-events: none;
+
+  transform-origin: bottom center;
+  transform: perspective(900px) rotateX(62deg);
+
+  /* glow + fade to horizon */
+  -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1), rgba(0,0,0,.55) 55%, rgba(0,0,0,0) 100%);
+  mask-image: linear-gradient(to top, rgba(0,0,0,1), rgba(0,0,0,.55) 55%, rgba(0,0,0,0) 100%);
+
+  filter: blur(.0px);
+  opacity: .75;
+}
+
+.grid-floor::before{
+  content:"";
+  position:absolute;
+  inset:0;
+
+  /* grid lines */
+  background:
+    repeating-linear-gradient(to right, rgba(73,214,255,.20) 0 1px, transparent 1px 64px),
+    repeating-linear-gradient(to top,   rgba(73,214,255,.20) 0 1px, transparent 1px 56px);
+
+  /* neon haze */
+  box-shadow: 0 -30px 80px rgba(255,79,216,.22);
+}
+
+.grid-floor::after{
+  content:"";
+  position:absolute;
+  left: -10%;
+  right: -10%;
+  top: -18%;
+  height: 28%;
+
+  /* horizon glow band */
+  background: radial-gradient(closest-side, rgba(255,79,216,.30), rgba(73,214,255,.18), transparent 70%);
+  filter: blur(10px);
+  opacity: .9;
+}
+
+/* slow grid “movement” */
+@keyframes gridMove{
+  0%   { background-position: 0 0, 0 0; }
+  100% { background-position: 0 0, 0 140px; }
+}
+.grid-floor::before{
+  animation: gridMove 2.8s linear infinite;
+}
 /* =========================
    Layout
    ========================= */
