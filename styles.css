@@ -1,14 +1,10 @@
-/* =========================
-   Design Tokens (edit these)
-   ========================= */
 :root{
   --bg: #07070b;
-  --panel: rgba(255,255,255,.06);
-  --text: rgba(255,255,255,.90);
+  --text: rgba(255,255,255,.92);
   --muted: rgba(255,255,255,.62);
+  --panel: rgba(255,255,255,.06);
   --border: rgba(255,255,255,.12);
 
-  /* Accent set (blue/purple/pink/indigo) */
   --a1: #6d6bff;   /* indigo */
   --a2: #49d6ff;   /* cyan */
   --a3: #ff4fd8;   /* pink */
@@ -18,206 +14,47 @@
   --radius: 18px;
 }
 
-/* =========================
-   Base reset
-   ========================= */
 *{ box-sizing: border-box; }
 html, body{ height: 100%; }
+
 body{
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
   line-height: 1.5;
   overflow-x: hidden;
 }
 
 /* =========================
-   Nebula environment (VISIBLE + spread)
+   BACKGROUND LAYERS (fixed order)
+   z-index stack:
+   -4 = base vignette
+   -3 = nebula
+   -2 = grain
+   -1 = grid
    ========================= */
+
+/* Base vignette so edges feel premium */
+body{
+  background:
+    radial-gradient(1200px 800px at 50% 30%, rgba(255,255,255,.04), transparent 60%),
+    radial-gradient(1200px 900px at 50% 100%, rgba(255,255,255,.03), transparent 65%),
+    var(--bg);
+}
+
+/* Strong nebula (this is what you liked earlier) */
 body::before{
   content:"";
   position: fixed;
-  inset: -45vmax;
-  z-index: -1;
-  pointer-events: none;
-
-  background:
-    radial-gradient(75vmax 60vmax at 8% 28%, rgba(109,107,255,.65), transparent 62%),
-    radial-gradient(70vmax 55vmax at 18% 78%, rgba(73,214,255,.38), transparent 64%),
-    radial-gradient(80vmax 62vmax at 92% 20%, rgba(255,79,216,.34), transparent 65%),
-    radial-gradient(90vmax 70vmax at 86% 84%, rgba(184,107,255,.32), transparent 66%),
-    radial-gradient(95vmax 78vmax at 52% 52%, rgba(255,255,255,.08), transparent 62%);
-
-  filter: blur(28px) saturate(1.55);
-  opacity: .98;
-  animation: nebulaDrift 16s ease-in-out infinite alternate;
-}
-
-@keyframes nebulaDrift{
-  0%   { transform: translate3d(-1.2%, 1.0%, 0) rotate(-4deg) scale(1.03); }
-  100% { transform: translate3d( 1.2%, -1.0%, 0) rotate( 4deg) scale(1.06); }
-}
-
-/* Subtle grain (does NOT kill nebula) */
-body::after{
-  content:"";
-  position: fixed;
-  inset: 0;
-  z-index: -2;
-  pointer-events: none;
-
-  background:
-    repeating-linear-gradient(
-      0deg,
-      rgba(255,255,255,.028) 0px,
-      rgba(255,255,255,.028) 1px,
-      transparent 2px,
-      transparent 4px
-    );
-
-  opacity: .12;
-  mix-blend-mode: normal;
-}
-
-/* =========================
-   Layout
-   ========================= */
-header, main, footer{
-  max-width: var(--maxw);
-  margin: 0 auto;
-  padding: 22px 18px;
-}
-
-header{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-}
-
-h1{
-  margin: 0;
-  font-size: 18px;
-  letter-spacing: .2px;
-  font-weight: 650;
-
-  /* slight iridescent hint on your name */
-  background: linear-gradient(90deg, var(--text), rgba(73,214,255,.9), rgba(255,79,216,.85), var(--text));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-nav{
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-nav a{
-  text-decoration: none;
-  color: var(--muted);
-  padding: 8px 10px;
-  border-radius: 999px;
-  border: 1px solid transparent;
-  transition: transform .18s ease, background .18s ease, border-color .18s ease, color .18s ease;
-}
-
-nav a:hover{
-  color: var(--text);
-  background: rgba(255,255,255,.05);
-  border-color: rgba(255,255,255,.10);
-  transform: translateY(-1px);
-}
-
-main{
-  padding-top: 34px;
-}
-
-h2{
-  margin: 0 0 10px 0;
-  font-size: 34px;
-  line-height: 1.1;
-  letter-spacing: -.4px;
-}
-
-p{
-  margin: 0 0 14px 0;
-  color: var(--muted);
-  max-width: 68ch;
-}
-
-.card{
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 18px;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-}
-
-footer{
-  padding-bottom: 34px;
-  color: rgba(255,255,255,.5);
-  font-size: 14px;
-}
-
-/* =========================
-   Retro grid floor (80s horizon)
-   NOTE: requires <div class="grid-floor"></div> in index.html
-   ========================= */
-.grid-floor{
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: -6vh;
-  height: 46vh;
+  inset: -40vmax;
   z-index: -3;
   pointer-events: none;
 
-  transform-origin: bottom center;
-  transform: perspective(900px) rotateX(62deg);
-
-  -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1), rgba(0,0,0,.55) 55%, rgba(0,0,0,0) 100%);
-  mask-image: linear-gradient(to top, rgba(0,0,0,1), rgba(0,0,0,.55) 55%, rgba(0,0,0,0) 100%);
-
-  opacity: .78;
-}
-
-.grid-floor::before{
-  content:"";
-  position:absolute;
-  inset:0;
-
   background:
-    repeating-linear-gradient(to right, rgba(73,214,255,.22) 0 1px, transparent 1px 64px),
-    repeating-linear-gradient(to top,   rgba(73,214,255,.22) 0 1px, transparent 1px 56px);
+    /* left energy */
+    radial-gradient(65vmax 55vmax at 10% 30%, rgba(109,107,255,.62), transparent 62%),
+    radial-gradient(60vmax 52vmax at 18% 78%, rgba(73,214,255,.40), transparent 64%),
 
-  box-shadow: 0 -30px 80px rgba(255,79,216,.18);
-  animation: gridMove 2.8s linear infinite;
-}
-
-.grid-floor::after{
-  content:"";
-  position:absolute;
-  left: -10%;
-  right: -10%;
-  top: -18%;
-  height: 28%;
-
-  background: radial-gradient(closest-side, rgba(255,79,216,.26), rgba(73,214,255,.16), transparent 70%);
-  filter: blur(10px);
-  opacity: .9;
-}
-
-@keyframes gridMove{
-  0%   { background-position: 0 0, 0 0; }
-  100% { background-position: 0 0, 0 140px; }
-}
-
-/* Mobile tweaks */
-@media (max-width: 640px){
-  header{ flex-direction: column; align-items: flex-start; }
-  h2{ font-size: 28px; }
-}
+    /* right energy */
+    radial-gradient(70vmax 58vmax at 92%
