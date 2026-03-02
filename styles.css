@@ -106,7 +106,7 @@ body{
 transform: perspective(720px) rotateX(68deg) translateY(22vh) scale(1.8, 1.25);
 
   /* Make it pop like the reference */
-filter: drop-shadow(0 0 6px #00ffff) drop-shadow(0 0 12px #00ffff);
+filter: drop-shadow(0 0 3px #00ffff) drop-shadow(0 0 6px #00ffff);
 
   /* Animate the grid moving forward */
   animation: gridScroll 2.4s linear infinite;
