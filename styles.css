@@ -1,6 +1,7 @@
 /* =========================
    Retro Grids — full background system
    ========================= */
+body { background: red !important; }
 
 :root{
   --bg: #05060b;
