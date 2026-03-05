@@ -21,7 +21,7 @@
 
 body{
   margin: 0;
-  background: transparent;   /* IMPORTANT */
+  background: #05060b; /* fallback if image fails */
   color: var(--text);
   font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
   line-height: 1.5;
@@ -29,23 +29,6 @@ body{
 }
 
 /* Background wrapper */
-.retro-bg{
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-
-  /* cloudy / black-marble background (no url) */
-  background:
-    radial-gradient(1200px 900px at 20% 25%, rgba(255,255,255,.06), transparent 65%),
-    radial-gradient(1100px 900px at 75% 35%, rgba(255,255,255,.05), transparent 68%),
-    radial-gradient(900px 800px at 55% 80%, rgba(255,255,255,.04), transparent 70%),
-
-    radial-gradient(900px 700px at 30% 60%, rgba(20,30,45,.45), transparent 72%),
-    radial-gradient(950px 750px at 70% 55%, rgba(50,20,70,.35), transparent 74%),
-
-    linear-gradient(180deg, #050608 0%, #050608 50%, #030406 100%);
-}
 
 .retro-bg::before{
   content:"";
