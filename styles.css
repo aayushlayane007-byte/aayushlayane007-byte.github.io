@@ -89,7 +89,7 @@ transparent 3px 100px
 );
 
 transform-origin:50% 0%;
-transform: perspective(500px) rotateX(-45deg) translateY(-150vh) scale(3,3);
+transform: perspective(500px) rotateX(-45deg) translateY(-125vh) scale(3,3);
 
 filter: drop-shadow(0 0 2px #0078ff);
 pointer-events:none;
@@ -128,7 +128,7 @@ pointer-events:none;
 
   /* This is the KEY for the “floor” look */
   transform-origin: 50% 100%;
-transform: perspective(500px) rotateX(45deg) translateY(150vh) scale(3, 3);
+transform: perspective(500px) rotateX(45deg) translateY(125vh) scale(3, 3);
 filter: drop-shadow(0 0 2px #00ffff);
    
 }
