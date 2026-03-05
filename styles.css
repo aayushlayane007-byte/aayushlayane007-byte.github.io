@@ -90,6 +90,7 @@ transparent 4px 90px
 transform-origin:50% 0%;
 transform: perspective(600px) rotateX(-45deg) translateY(-14vh) scale(2.25,1.25);
 
+filter: drop-shadow(0 0 2px #0078ff);
 pointer-events:none;
 }
 
@@ -127,7 +128,8 @@ pointer-events:none;
   /* This is the KEY for the “floor” look */
   transform-origin: 50% 100%;
 transform: perspective(600px) rotateX(45deg) translateY(14vh) scale(2.25, 1.25);
-
+filter: drop-shadow(0 0 2px #00ffff);
+   
 }
 
 /* Move only the grid lines, not the glow */
