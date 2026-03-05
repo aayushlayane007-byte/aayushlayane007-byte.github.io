@@ -70,6 +70,30 @@ body{
   opacity: .95;
 }
 
+.retro-bg::before{
+content:"";
+position:absolute;
+inset:0;
+
+background:
+repeating-linear-gradient(
+to right,
+rgba(0,120,255,.9) 0 2px,
+transparent 2px 110px
+),
+repeating-linear-gradient(
+to bottom,
+rgba(0,120,255,.9) 0 2px,
+transparent 2px 110px
+);
+
+transform-origin:50% 0%;
+transform: perspective(720px) rotateX(-68deg) translateY(-14vh) scale(1.8,1.25);
+
+filter: drop-shadow(0 0 6px rgba(0,120,255,.8));
+pointer-events:none;
+}
+
 /* Horizon glow + perspective grid */
 .retro-bg::after{
   content:"";
@@ -103,13 +127,11 @@ body{
 
   /* This is the KEY for the “floor” look */
   transform-origin: 50% 100%;
-transform: perspective(720px) rotateX(68deg) translateY(22vh) scale(1.8, 1.25);
+transform: perspective(720px) rotateX(68deg) translateY(14vh) scale(1.8, 1.25);
 
   /* Make it pop like the reference */
 filter: drop-shadow(0 0 1px #00ffff) drop-shadow(0 0 3px #00ffff);
 
-  /* Animate the grid moving forward */
-  animation: gridScroll 2.4s linear infinite;
 }
 
 /* Move only the grid lines, not the glow */
