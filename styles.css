@@ -19,6 +19,18 @@
   --maxw: 1060px;
 }
 
+.page-bg{
+  position: fixed;
+  inset: 0;
+  z-index: -20;
+  pointer-events: none;
+
+  background-image: url("assets/bg/Photo 1.jpg"); /* change later */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
 body{
   margin: 0;
   background: #05060b; /* fallback if image fails */
