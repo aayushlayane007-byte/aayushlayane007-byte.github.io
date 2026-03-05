@@ -32,30 +32,19 @@ body{
 .retro-bg{
   position: fixed;
   inset: 0;
-
-  /* IMPORTANT: keep it behind content but still visible */
   z-index: 0;
-
   pointer-events: none;
 
-  /* black marble / cloudy background */
-  background-image:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='420'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E"),
-    radial-gradient(900px 700px at 20% 30%, rgba(255,255,255,.06), transparent 60%),
-    radial-gradient(1100px 900px at 70% 40%, rgba(255,255,255,.05), transparent 62%),
-    radial-gradient(900px 900px at 50% 80%, rgba(255,255,255,.04), transparent 65%),
-    linear-gradient(180deg, #050608 0%, #050608 45%, #030406 100%);
+  /* cloudy / black-marble background (no url) */
+  background:
+    radial-gradient(1200px 900px at 20% 25%, rgba(255,255,255,.06), transparent 65%),
+    radial-gradient(1100px 900px at 75% 35%, rgba(255,255,255,.05), transparent 68%),
+    radial-gradient(900px 800px at 55% 80%, rgba(255,255,255,.04), transparent 70%),
 
-  background-size:
-    520px 520px,
-    cover,
-    cover,
-    cover,
-    cover;
+    radial-gradient(900px 700px at 30% 60%, rgba(20,30,45,.45), transparent 72%),
+    radial-gradient(950px 750px at 70% 55%, rgba(50,20,70,.35), transparent 74%),
 
-  background-repeat: repeat, no-repeat, no-repeat, no-repeat, no-repeat;
-
-  background-blend-mode: overlay, screen, screen, screen, normal;
+    linear-gradient(180deg, #050608 0%, #050608 50%, #030406 100%);
 }
 
 .retro-bg::before{
