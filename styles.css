@@ -66,13 +66,13 @@ inset:0;
 background:
 repeating-linear-gradient(
 to right,
-rgba(0,120,255,.9) 0 4px,
-transparent 4px 90px
+rgba(0,120,255,.9) 0 3px,
+transparent 3px 100px
 ),
 repeating-linear-gradient(
 to bottom,
-rgba(0,120,255,.9) 0 4px,
-transparent 4px 90px
+rgba(0,120,255,.9) 0 3px,
+transparent 3px 100px
 );
 
 transform-origin:50% 0%;
@@ -99,15 +99,15 @@ pointer-events:none;
     /* grid vertical lines */
     repeating-linear-gradient(
       to right,
-      var(--grid) 0 4px,
-      transparent 4px 90px
+      var(--grid) 0 3px,
+      transparent 3px 100px
     ),
 
     /* grid horizontal lines */
     repeating-linear-gradient(
       to bottom,
-      var(--grid) 0 4px,
-      transparent 4px 90px
+      var(--grid) 0 3px,
+      transparent 3px 100px
     ),
 
     /* vignette (keeps edges dark like the reference) */
