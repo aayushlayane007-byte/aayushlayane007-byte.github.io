@@ -21,16 +21,9 @@
 
 body{
   margin: 0;
-  background:
-  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='420'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E"),
-  radial-gradient(900px 700px at 20% 30%, rgba(255,255,255,.06), transparent 60%),
-  radial-gradient(1100px 900px at 70% 40%, rgba(255,255,255,.05), transparent 62%),
-  radial-gradient(900px 900px at 50% 80%, rgba(255,255,255,.04), transparent 65%),
-  linear-gradient(180deg, #050608 0%, #050608 45%, #030406 100%);
 
-background-size: 520px 520px, cover, cover, cover, cover;
-background-repeat: repeat, no-repeat, no-repeat, no-repeat, no-repeat;
-background-blend-mode: overlay, screen, screen, screen, normal;
+  /* keep body simple so retro-bg is the real background */
+  background: var(--bg);
 
   color: var(--text);
   font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
@@ -42,7 +35,10 @@ background-blend-mode: overlay, screen, screen, screen, normal;
 .retro-bg{
   position: fixed;
   inset: 0;
-  z-index: -10;
+
+  /* IMPORTANT: keep it behind content but still visible */
+  z-index: 0;
+
   pointer-events: none;
 
   /* black marble / cloudy background */
@@ -66,27 +62,27 @@ background-blend-mode: overlay, screen, screen, screen, normal;
 }
 
 .retro-bg::before{
-content:"";
-position:absolute;
-inset:0;
+  content:"";
+  position:absolute;
+  inset:0;
 
-background:
-repeating-linear-gradient(
-to right,
-rgba(0,120,255,.9) 0 3px,
-transparent 3px 100px
-),
-repeating-linear-gradient(
-to bottom,
-rgba(0,120,255,.9) 0 3px,
-transparent 3px 100px
-);
+  background:
+    repeating-linear-gradient(
+      to right,
+      rgba(0,120,255,.9) 0 3px,
+      transparent 3px 100px
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      rgba(0,120,255,.9) 0 3px,
+      transparent 3px 100px
+    );
 
-transform-origin:50% 0%;
-transform: perspective(600px) rotateX(-45deg) translateY(-14vh) scale(2.25,2);
+  transform-origin:50% 0%;
+  transform: perspective(600px) rotateX(-45deg) translateY(-14vh) scale(2.25,2);
 
-filter: drop-shadow(0 0 2px #0078ff);
-pointer-events:none;
+  filter: drop-shadow(0 0 2px #0078ff);
+  pointer-events:none;
 }
 
 /* Horizon glow + perspective grid */
@@ -95,14 +91,7 @@ pointer-events:none;
   position:absolute;
   inset:0;
 
-  /* We build the scene in layers:
-     1) horizon glow
-     2) grid lines (two repeating gradients)
-     3) vignette fade
-  */
   background:
-    /* horizon glow band */
-
     /* grid vertical lines */
     repeating-linear-gradient(
       to right,
@@ -120,17 +109,15 @@ pointer-events:none;
     /* vignette (keeps edges dark like the reference) */
     radial-gradient(1200px 900px at 50% 70%, transparent 40%, rgba(0,0,0,.55) 78%, rgba(0,0,0,.78) 100%);
 
-  /* This is the KEY for the “floor” look */
   transform-origin: 50% 100%;
-transform: perspective(600px) rotateX(45deg) translateY(14vh) scale(2.25, 2);
-filter: drop-shadow(0 0 2px #00ffff);
-   
+  transform: perspective(600px) rotateX(45deg) translateY(14vh) scale(2.25, 2);
+  filter: drop-shadow(0 0 2px #00ffff);
 }
 
 /* Move only the grid lines, not the glow */
 @keyframes gridScroll{
-0%   { background-position: 0 0, 0 0, 0 0; }
-100% { background-position: 0 0, 0 220px, 0 0; }
+  0%   { background-position: 0 0, 0 0, 0 0; }
+  100% { background-position: 0 0, 0 220px, 0 0; }
 }
 
 /* Film grain overlay */
@@ -139,7 +126,10 @@ body::after{
   position: fixed;
   inset: 0;
   pointer-events: none;
-  z-index: -9;
+
+  /* IMPORTANT: above retro-bg (0), below content (1) */
+  z-index: 0;
+
   background:
     repeating-linear-gradient(
       0deg,
