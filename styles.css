@@ -26,3 +26,43 @@ footer {
   padding: 20px 40px;
   opacity: 0.6;
 }
+
+/* =========================
+   Page Background Images
+   ========================= */
+
+body {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Home page */
+.home {
+  background-image: url("home-bg.jpg");
+}
+
+/* About page */
+.about {
+  background-image: url("about-bg.jpg");
+}
+
+/* Experiences page */
+.experiences {
+  background-image: url("experiences-bg.jpg");
+}
+
+/* Gateway page */
+.gateway {
+  background-image: url("gateway-bg.jpg");
+}
+
+/* Interests page */
+.interests {
+  background-image: url("interests-bg.jpg");
+}
+
+/* Year in Review page */
+.year {
+  background-image: url("year-bg.jpg");
+}
