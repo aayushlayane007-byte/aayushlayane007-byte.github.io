@@ -25,7 +25,7 @@
   z-index: -20;
   pointer-events: none;
 
-  background-image: url("assets/bg/Photo 1.jpg"); /* change later */
+  background-image: url("assets/Photo 1.jpg"); /* change later */
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
