@@ -19,14 +19,16 @@
   --maxw: 1060px;
 }
 
-.page-bg{
+.retro-bg{
   position: fixed;
   inset: 0;
-  z-index: -20;
+  z-index: 0;
   pointer-events: none;
 
-  background-image: url("assets/Photo 2.jpg"); /* change later */
-  background-size: contain;
+  background-image:
+    linear-gradient(rgba(0,0,0,.35), rgba(0,0,0,.45)),
+    url("assets/Photo 1.jpg");
+  background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 }
