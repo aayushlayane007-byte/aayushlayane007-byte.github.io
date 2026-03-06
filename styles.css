@@ -43,7 +43,7 @@ body{
 /* Background for each page */
 
 .home{
-  background-image:url("assets/8.jpg");
+  background-image:url("assets/1`.jpg");
 }
 
 .about{
@@ -51,17 +51,17 @@ body{
 }
 
 .experiences{
-  background-image:url("assets/3.jpg");
-}
-
-.gateway{
   background-image:url("assets/4.jpg");
 }
 
-.interests{
+.gateway{
   background-image:url("assets/5.jpg");
 }
 
+.interests{
+  background-image:url("assets/6.jpg");
+}
+
 .year{
-  background-image:url("assets/7.png");
+  background-image:url("assets/7.jpg");
 }
