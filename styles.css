@@ -1,185 +1,28 @@
-/* =========================
-   Retro Grids — full background system
-   ========================= */
-
-:root{
-  --bg: #05060b;
-  --text: rgba(255,255,255,.92);
-  --muted: rgba(255,255,255,.66);
-
-  /* grid colors */
-  --grid: #00ffff;
-  --gridBold: rgba(0, 255, 255, .55);
-
-  /* horizon glow */
-  --glowA: rgba(160, 90, 255, .22);  /* violet */
-  --glowB: rgba(0, 255, 255, .18);   /* cyan */
-  --glowC: rgba(255, 80, 210, .14);  /* pink */
-
-  --maxw: 1060px;
-}
-
-.retro-bg{
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-
-  background-image:
-    linear-gradient(rgba(0,0,0,.35), rgba(0,0,0,.45)),
-    url("gradient-grainy-colorful-background_23-2149987419.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-
-body{
+body {
   margin: 0;
-  background: #05060b; /* fallback if image fails */
-  color: var(--text);
-  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-  line-height: 1.5;
-  overflow-x: hidden;
+  background: black;
+  color: white;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Background wrapper */
-
-.retro-bg::before{
-  content:"";
-  position:absolute;
-  inset:0;
-
-  background:
-    repeating-linear-gradient(
-      to right,
-      rgba(0,120,255,.9) 0 3px,
-      transparent 3px 100px
-    ),
-    repeating-linear-gradient(
-      to bottom,
-      rgba(0,120,255,.9) 0 3px,
-      transparent 3px 100px
-    );
-
-  transform-origin:50% 0%;
-  transform: perspective(600px) rotateX(-45deg) translateY(-14vh) scale(2.25,2);
-
-  filter: drop-shadow(0 0 2px #0078ff);
-  pointer-events:none;
-}
-
-/* Horizon glow + perspective grid */
-.retro-bg::after{
-  content:"";
-  position:absolute;
-  inset:0;
-
-  background:
-    /* grid vertical lines */
-    repeating-linear-gradient(
-      to right,
-      var(--grid) 0 3px,
-      transparent 3px 100px
-    ),
-
-    /* grid horizontal lines */
-    repeating-linear-gradient(
-      to bottom,
-      var(--grid) 0 3px,
-      transparent 3px 100px
-    ),
-
-    /* vignette (keeps edges dark like the reference) */
-    radial-gradient(1200px 900px at 50% 70%, transparent 40%, rgba(0,0,0,.55) 78%, rgba(0,0,0,.78) 100%);
-
-  transform-origin: 50% 100%;
-  transform: perspective(600px) rotateX(45deg) translateY(14vh) scale(2.25, 2);
-  filter: drop-shadow(0 0 2px #00ffff);
-}
-
-/* Move only the grid lines, not the glow */
-@keyframes gridScroll{
-  0%   { background-position: 0 0, 0 0, 0 0; }
-  100% { background-position: 0 0, 0 220px, 0 0; }
-}
-
-/* Film grain overlay */
-body::after{
-  content:"";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-
-  /* IMPORTANT: above retro-bg (0), below content (1) */
-  z-index: 0;
-
-  background:
-    repeating-linear-gradient(
-      0deg,
-      rgba(255,255,255,.03) 0px,
-      rgba(255,255,255,.03) 1px,
-      transparent 2px,
-      transparent 4px
-    );
-  opacity: .12;
-}
-
-/* =========================
-   Your site content styling (simple, clean)
-   ========================= */
-header, main, footer{
-  max-width: var(--maxw);
-  margin: 0 auto;
-  padding: 22px 18px;
-  position: relative;
-  z-index: 1; /* ensure content stays above background */
-}
-
-header{
+header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  gap: 14px;
+  align-items: center;
+  padding: 20px 40px;
 }
 
-h1{
-  margin: 0;
-  font-size: 18px;
-  font-weight: 650;
-  letter-spacing: .2px;
-}
-
-nav{
-  display:flex;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-nav a{
-  color: var(--muted);
+nav a {
+  color: white;
   text-decoration: none;
-  font-size: 14px;
-}
-nav a:hover{ color: var(--text); }
-
-main{ padding-top: 60px; }
-h2{
-  margin: 0 0 12px 0;
-  font-size: 44px;
-  letter-spacing: -.6px;
-}
-p{
-  margin: 0 0 14px 0;
-  color: var(--muted);
-  max-width: 70ch;
+  margin-left: 20px;
 }
 
-footer{
-  padding-bottom: 34px;
-  color: rgba(255,255,255,.55);
-  font-size: 14px;
+main {
+  padding: 60px 40px;
 }
 
-@media (max-width: 640px){
-  header{ flex-direction: column; align-items: flex-start; }
-  h2{ font-size: 34px; }
+footer {
+  padding: 20px 40px;
+  opacity: 0.6;
 }
