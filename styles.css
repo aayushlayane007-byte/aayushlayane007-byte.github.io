@@ -30,39 +30,38 @@ footer {
 /* =========================
    Page Background Images
    ========================= */
+/* Full screen background setup */
 
-body {
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+body{
+  margin:0;
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
 }
 
-/* Home page */
-.home {
-  background-image: url("1.jpg");
+
+/* Background for each page */
+
+.home{
+  background-image:url("assets/1.jpg");
 }
 
-/* About page */
-.about {
-  background-image: url("2.jpg");
+.about{
+  background-image:url("assets/2.jpg");
 }
 
-/* Experiences page */
-.experiences {
-  background-image: url("3.jpg");
+.experiences{
+  background-image:url("assets/3.jpg");
 }
 
-/* Gateway page */
-.gateway {
-  background-image: url("4.jpg");
+.gateway{
+  background-image:url("assets/4.jpg");
 }
 
-/* Interests page */
-.interests {
-  background-image: url("5.jpg");
+.interests{
+  background-image:url("assets/5.jpg");
 }
 
-/* Year in Review page */
-.year {
-  background-image: url("8.jpg");
+.year{
+  background-image:url("assets/6.jpg");
 }
