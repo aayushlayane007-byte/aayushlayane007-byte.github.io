@@ -32,11 +32,15 @@ footer {
    ========================= */
 /* Full screen background setup */
 
-body{
-  margin:0;
-  background-size:contain;
-  background-position:center;
-  background-repeat:no-repeat;
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: white;
+  font-family: Arial, Helvetica, sans-serif;
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 
