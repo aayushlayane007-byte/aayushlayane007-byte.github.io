@@ -24,8 +24,7 @@ header {
   padding: 24px 48px;
   box-sizing: border-box;
 
-  background: rgba(0, 0, 0, 0.45);
-  backdrop-filter: blur(10px);
+  background: rgba(0, 0, 0, 0.85);
 
   z-index: 1000;
 }
@@ -66,7 +65,7 @@ nav a:hover {
 }
 
 main {
-  padding: 220px 40px 60px 40px;
+  padding: 180px 40px 60px 40px;
 }
 
 footer {
