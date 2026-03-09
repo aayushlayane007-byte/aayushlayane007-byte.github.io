@@ -138,7 +138,7 @@ footer {
 /* Name */
 
 .home-name {
-  font-size: 32px;
+  font-size: 36px;
   font-weight: 700;
   margin-bottom: 30px;
 }
@@ -147,7 +147,7 @@ footer {
 
 .home-photo {
   width: 520px;
-  max-width: 90%;
+  max-width: 100%;
   height: auto;
   border-radius: 14px;
   margin-bottom: 30px;
@@ -156,9 +156,9 @@ footer {
 /* Tagline */
 
 .home-tagline {
-  font-size: 34px;
+  font-size: 36px;
   font-weight: 700;
-  margin-bottom: 50px;
+  margin-bottom: 30px;
 }
 
 /* ================= CONTACT + SOCIAL GRID ================= */
@@ -181,7 +181,7 @@ footer {
 
 .contact-block h3,
 .social-block h3 {
-  font-size: 26px;
+  font-size: 24px;
   margin-bottom: 18px;
 }
 
@@ -221,7 +221,7 @@ footer {
 
 footer {
   text-align: center;
-  margin-top: 70px;
+  margin-top: 40px;
   padding: 20px 0;
   font-size: 16px;
   opacity: 0.7;
