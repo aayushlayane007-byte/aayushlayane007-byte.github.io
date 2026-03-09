@@ -219,6 +219,29 @@ footer {
 
 /* ================= FOOTER ================= */
 
+.contact-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.contact-row img {
+  width: 22px;
+  height: 22px;
+}
+
+.contact-row a {
+  color: white;
+  text-decoration: underline;
+  font-size: 18px;
+}
+
+.contact-row a:hover {
+  opacity: 0.7;
+}
+
 footer {
   text-align: center;
   margin-top: 40px;
