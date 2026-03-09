@@ -208,3 +208,12 @@ footer {
   width: 36px;
   height: 36px;
 }
+
+.contact-info a {
+  color: white;
+  text-decoration: none;
+}
+
+.contact-info a:hover {
+  opacity: 0.7;
+}
