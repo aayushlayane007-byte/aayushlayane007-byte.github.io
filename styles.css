@@ -15,11 +15,11 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 24px 40px;
+  padding: 24px 48px;
 }
 
 .logo img {
-  height: 52px;
+  height: 96px;
   width: auto;
   display: block;
 }
@@ -34,6 +34,8 @@ nav a {
   color: white;
   text-decoration: none;
   font-family: Inter, sans-serif;
+  font-size: 24px;
+
 }
 
 main {
