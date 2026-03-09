@@ -54,7 +54,7 @@ header {
   }
 
   50% {
-    filter: drop-shadow(0 0 800px rgba(220, 230, 255, 1));
+    filter: drop-shadow(0 0 80px rgba(220, 230, 255, 1));
   }
 
   100% {
