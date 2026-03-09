@@ -27,7 +27,7 @@ header {
 nav {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 36px;
 }
 
 nav a {
