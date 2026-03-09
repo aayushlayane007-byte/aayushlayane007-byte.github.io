@@ -66,6 +66,11 @@ nav a:hover {
 
 main {
   padding: 180px 40px 60px 40px;
+  box-sizing: border-box;
+}
+
+h1 {
+  margin-top: 0;
 }
 
 footer {
