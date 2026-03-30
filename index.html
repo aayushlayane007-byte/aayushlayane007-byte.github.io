@@ -1,95 +1,606 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aayush Layane</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aayush Layane</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* ── RESET & BASE ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-<link rel="preconnect" href="https://rsms.me/">
-<link rel="stylesheet" href="https://rsms.me/inter/inter.css">
-  
-<link rel="stylesheet" href="styles.css">
+    :root {
+      --accent: #7EB8FF;
+      --accent2: #B49DFF;
+      --glass: rgba(255,255,255,0.04);
+      --glass-border: rgba(255,255,255,0.09);
+      --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: black;
+      color: white;
+      min-height: 100vh;
+      overflow-x: hidden;
+      cursor: url("assets/cursor1.png") 24 24, auto;
+    }
+
+    /* ── NOISE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.4;
+    }
+
+    /* ── BACKGROUND ── */
+    .home {
+      background-image: url("assets/7.jpg");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
+
+    .home::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(160deg, rgba(0,0,0,0.7) 0%, rgba(0,0,20,0.85) 100%);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* ── HEADER ── */
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 48px;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--glass-border);
+      z-index: 1000;
+      transition: padding 0.4s var(--ease-out-expo);
+    }
+
+    header.scrolled {
+      padding: 14px 48px;
+      background: rgba(0,0,0,0.82);
+    }
+
+    /* ── LOGO ── */
+    .logo { perspective: 800px; }
+    .logo img {
+      height: 72px;
+      width: auto;
+      display: block;
+      transition: transform 1.5s ease;
+      transform-style: preserve-3d;
+      animation: logoPulse 3s ease-in-out infinite;
+    }
+    .logo img:hover { transform: rotateY(360deg); }
+
+    @keyframes logoPulse {
+      0%   { filter: drop-shadow(0 0 0px rgba(220,230,255,0)); }
+      50%  { filter: drop-shadow(0 0 40px rgba(200,220,255,1)) drop-shadow(0 0 80px rgba(160,200,255,0.9)); }
+      100% { filter: drop-shadow(0 0 0px rgba(220,230,255,0)); }
+    }
+
+    /* ── DESKTOP NAV ── */
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+    }
+
+    nav a {
+      font-family: 'Syne', sans-serif;
+      color: rgba(255,255,255,0.75);
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      position: relative;
+      transition: color 0.2s ease;
+    }
+
+    nav a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0;
+      width: 0; height: 1.5px;
+      background: var(--accent);
+      transition: width 0.3s var(--ease-out-expo);
+    }
+
+    nav a:hover { color: white; }
+    nav a:hover::after { width: 100%; }
+
+    /* ── HAMBURGER ── */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      width: 36px;
+      height: 36px;
+      cursor: pointer;
+      z-index: 1100;
+      background: none;
+      border: none;
+      padding: 0;
+    }
+
+    .hamburger span {
+      display: block;
+      height: 2px;
+      background: white;
+      border-radius: 2px;
+      transition: transform 0.35s var(--ease-out-expo), opacity 0.25s ease, width 0.3s ease;
+      transform-origin: center;
+    }
+
+    .hamburger span:nth-child(1) { width: 28px; }
+    .hamburger span:nth-child(2) { width: 20px; }
+    .hamburger span:nth-child(3) { width: 24px; }
+
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); width: 28px; }
+    .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); width: 28px; }
+
+    /* ── MOBILE MENU ── */
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.96);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      z-index: 1050;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 40px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+
+    .mobile-menu.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .mobile-menu a {
+      font-family: 'Syne', sans-serif;
+      font-size: 36px;
+      font-weight: 800;
+      color: white;
+      text-decoration: none;
+      letter-spacing: -0.01em;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.4s ease, transform 0.4s var(--ease-out-expo), color 0.2s ease;
+    }
+
+    .mobile-menu.open a {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .mobile-menu.open a:nth-child(1) { transition-delay: 0.05s; }
+    .mobile-menu.open a:nth-child(2) { transition-delay: 0.10s; }
+    .mobile-menu.open a:nth-child(3) { transition-delay: 0.15s; }
+    .mobile-menu.open a:nth-child(4) { transition-delay: 0.20s; }
+    .mobile-menu.open a:nth-child(5) { transition-delay: 0.25s; }
+    .mobile-menu.open a:nth-child(6) { transition-delay: 0.30s; }
+
+    .mobile-menu a:hover { color: var(--accent); }
+
+    /* ── MAIN ── */
+    main {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 140px 40px 80px;
+    }
+
+    /* ── HERO SECTION ── */
+    .home-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 0;
+      width: 100%;
+      max-width: 900px;
+    }
+
+    /* ── EYEBROW ── */
+    .home-eyebrow {
+      font-family: 'Syne', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 18px;
+      opacity: 0;
+      transform: translateY(16px);
+      animation: fadeUp 0.7s var(--ease-out-expo) 0.2s forwards;
+    }
+
+    /* ── NAME ── */
+    .home-name {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(48px, 8vw, 96px);
+      font-weight: 800;
+      line-height: 0.95;
+      letter-spacing: -0.03em;
+      margin-bottom: 24px;
+      background: linear-gradient(135deg, #fff 30%, var(--accent2) 70%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      opacity: 0;
+      transform: translateY(24px);
+      animation: fadeUp 0.8s var(--ease-out-expo) 0.35s forwards;
+    }
+
+    /* ── PHOTO ── */
+    .home-photo-wrap {
+      position: relative;
+      margin-bottom: 32px;
+      opacity: 0;
+      transform: translateY(28px) scale(0.97);
+      animation: fadeUp 0.9s var(--ease-out-expo) 0.5s forwards;
+    }
+
+    .home-photo-wrap::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      z-index: -1;
+      opacity: 0.5;
+      filter: blur(12px);
+    }
+
+    .home-photo {
+      width: 420px;
+      max-width: 100%;
+      height: auto;
+      border-radius: 16px;
+      display: block;
+      border: 1px solid var(--glass-border);
+    }
+
+    /* ── TAGLINE ── */
+    .home-tagline {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(18px, 3vw, 26px);
+      font-weight: 600;
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 48px;
+      letter-spacing: 0.01em;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp 0.8s var(--ease-out-expo) 0.65s forwards;
+    }
+
+    /* ── INFO GRID ── */
+    .info-grid {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      flex-wrap: wrap;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp 0.8s var(--ease-out-expo) 0.8s forwards;
+    }
+
+    /* ── GLASS CARD ── */
+    .glass-card {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 28px 36px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: transform 0.3s var(--ease-out-expo), border-color 0.3s ease, background 0.3s ease;
+    }
+
+    .glass-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(126,184,255,0.25);
+      background: rgba(255,255,255,0.07);
+    }
+
+    .glass-card h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 16px;
+    }
+
+    /* ── CONTACT ROWS ── */
+    .contact-info { display: flex; flex-direction: column; gap: 10px; }
+
+    .contact-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      justify-content: flex-start;
+    }
+
+    .contact-row img { width: 20px; height: 20px; opacity: 0.8; }
+
+    .contact-row a {
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      font-size: 15px;
+      transition: color 0.2s ease;
+    }
+
+    .contact-row a:hover { color: white; }
+
+    /* ── SOCIAL LINKS ── */
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 18px;
+      margin-top: 4px;
+    }
+
+    .social-links a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      border: 1px solid var(--glass-border);
+      background: var(--glass);
+      transition: transform 0.25s var(--ease-out-expo), border-color 0.25s ease, background 0.25s ease;
+    }
+
+    .social-links a:hover {
+      transform: translateY(-3px) scale(1.08);
+      border-color: var(--accent);
+      background: rgba(126,184,255,0.1);
+    }
+
+    .social-links img { width: 22px; height: 22px; }
+
+    /* ── SCROLL INDICATOR ── */
+    .scroll-indicator {
+      position: fixed;
+      bottom: 36px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 1.4s forwards;
+      z-index: 10;
+    }
+
+    .scroll-indicator span {
+      font-family: 'Syne', sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+    }
+
+    .scroll-line {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.3), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.3; transform: scaleY(1); }
+      50% { opacity: 1; transform: scaleY(1.1); }
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 24px 40px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.3);
+      letter-spacing: 0.05em;
+      font-family: 'Syne', sans-serif;
+    }
+
+    /* ── KEYFRAMES ── */
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* ── SCROLL-REVEAL ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.8s var(--ease-out-expo), transform 0.8s var(--ease-out-expo);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      header { padding: 16px 24px; }
+      header.scrolled { padding: 12px 24px; }
+
+      nav { display: none; }
+      .hamburger { display: flex; }
+      .mobile-menu { display: flex; }
+
+      main { padding: 120px 24px 80px; }
+
+      .home-photo { width: 300px; }
+      .info-grid { flex-direction: column; align-items: center; }
+      .glass-card { width: 100%; max-width: 320px; }
+    }
+  </style>
 </head>
-
 <body class="home">
 
-<header>
-  <div class="logo">
-    <a href="index.html">
-      <img src="assets/logo.png" alt="Aayush Layane logo">
-    </a>
-  </div>
-
-  <nav>
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobileMenu">
     <a href="index.html">Home</a>
     <a href="about.html">About</a>
     <a href="experiences.html">Experiences</a>
     <a href="gateway.html">Gateway</a>
     <a href="interests.html">Interests</a>
     <a href="yearinreview.html">Year in Review</a>
-  </nav>
-</header>
-
-<main>
-
-  <div class="home-container">
-
-    <h1 class="home-name">Aayush Layane</h1>
-
-    <img src="assets/myphoto.jpg" alt="Aayush Layane" class="home-photo">
-
-    <h2 class="home-tagline">Welcome to my WRLD!!</h2>
-
-<div class="contact-section">
-
-  <div class="info-grid">
-
-    <div class="contact-block">
-      <h3>Contact</h3>
-
-      <div class="contact-info">
-        <div class="contact-row">
-          <img src="assets/phone.png" alt="Phone">
-          <a href="tel:+15132238771">Phone</a>
-        </div>
-
-        <div class="contact-row">
-          <img src="assets/mail.png" alt="Email">
-          <a href="mailto:aayush.layane007@gmail.com">Mail</a>
-        </div>
-      </div>
-    </div>
-
-    <div class="social-block">
-      <h3>Socials</h3>
-
-      <div class="social-links">
-
-        <a href="https://www.instagram.com/aayush._.999/" target="_blank">
-          <img src="assets/instagram.png" alt="Instagram">
-        </a>
-
-        <a href="https://www.linkedin.com/feed/" target="_blank">
-          <img src="assets/linkedin.png" alt="LinkedIn">
-        </a>
-
-        <a href="https://github.com/aayushlayane007-byte" target="_blank">
-          <img src="assets/github.png" alt="GitHub">
-        </a>
-
-      </div>
-
-    </div>
-
   </div>
 
-</div>
+  <header id="mainHeader">
+    <div class="logo">
+      <a href="index.html">
+        <img src="assets/logo.png" alt="Aayush Layane logo">
+      </a>
+    </div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="experiences.html">Experiences</a>
+      <a href="gateway.html">Gateway</a>
+      <a href="interests.html">Interests</a>
+      <a href="yearinreview.html">Year in Review</a>
+    </nav>
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </header>
 
-</main>
+  <main>
+    <div class="home-container">
 
-<footer>
-  <p>© 2026 Aayush Layane</p>
-</footer>
+      <p class="home-eyebrow">Portfolio — 2026</p>
+
+      <h1 class="home-name">Aayush Layane</h1>
+
+      <div class="home-photo-wrap">
+        <img src="assets/myphoto.jpg" alt="Aayush Layane" class="home-photo">
+      </div>
+
+      <h2 class="home-tagline">Welcome to my WRLD!!</h2>
+
+      <div class="info-grid">
+        <div class="glass-card contact-block reveal">
+          <h3>Contact</h3>
+          <div class="contact-info">
+            <div class="contact-row">
+              <img src="assets/phone.png" alt="Phone">
+              <a href="tel:+15132238771">Phone</a>
+            </div>
+            <div class="contact-row">
+              <img src="assets/mail.png" alt="Email">
+              <a href="mailto:aayush.layane007@gmail.com">Mail</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-card social-block reveal">
+          <h3>Socials</h3>
+          <div class="social-links">
+            <a href="https://www.instagram.com/aayush._.999/" target="_blank">
+              <img src="assets/instagram.png" alt="Instagram">
+            </a>
+            <a href="https://www.linkedin.com/feed/" target="_blank">
+              <img src="assets/linkedin.png" alt="LinkedIn">
+            </a>
+            <a href="https://github.com/aayushlayane007-byte" target="_blank">
+              <img src="assets/github.png" alt="GitHub">
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- SCROLL INDICATOR -->
+  <div class="scroll-indicator">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+
+  <footer>
+    <p>© 2026 Aayush Layane</p>
+  </footer>
+
+  <script>
+    // ── HEADER SHRINK ON SCROLL ──
+    const header = document.getElementById('mainHeader');
+    window.addEventListener('scroll', () => {
+      header.classList.toggle('scrolled', window.scrollY > 40);
+    });
+
+    // ── HAMBURGER MENU ──
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+
+    hamburger.addEventListener('click', () => {
+      const isOpen = mobileMenu.classList.toggle('open');
+      hamburger.classList.toggle('open', isOpen);
+      document.body.style.overflow = isOpen ? 'hidden' : '';
+    });
+
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.remove('open');
+        hamburger.classList.remove('open');
+        document.body.style.overflow = '';
+      });
+    });
+
+    // ── SCROLL REVEAL ──
+    const revealEls = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+
+    revealEls.forEach(el => observer.observe(el));
+  </script>
 
 </body>
 </html>
