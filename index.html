@@ -4,85 +4,33 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Aayush Layane</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://rsms.me/">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
   <link rel="stylesheet" href="styles.css">
   <style>
-    /* ── RESET & BASE ── */
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --accent: #7EB8FF;
-      --accent2: #B49DFF;
-      --glass: rgba(255,255,255,0.04);
-      --glass-border: rgba(255,255,255,0.09);
       --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: black;
-      color: white;
-      min-height: 100vh;
-      overflow-x: hidden;
-      cursor: url("assets/cursor1.png") 24 24, auto;
-    }
-
-    /* ── NOISE OVERLAY ── */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 9999;
-      opacity: 0.4;
-    }
-
-    /* ── BACKGROUND ── */
-    .home {
-      background-image: url("assets/7.jpg");
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      background-attachment: fixed;
-    }
-
-    .home::after {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background: linear-gradient(160deg, rgba(0,0,0,0.7) 0%, rgba(0,0,20,0.85) 100%);
-      z-index: 0;
-      pointer-events: none;
-    }
-
-    /* ── HEADER ── */
+    /* ── HEADER (original size restored) ── */
     header {
       position: fixed;
       top: 0; left: 0; right: 0;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 20px 48px;
-      background: rgba(0,0,0,0.6);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--glass-border);
+      padding: 24px 48px;
+      box-sizing: border-box;
+      background: rgba(0,0,0,0.85);
       z-index: 1000;
-      transition: padding 0.4s var(--ease-out-expo);
     }
 
-    header.scrolled {
-      padding: 14px 48px;
-      background: rgba(0,0,0,0.82);
-    }
-
-    /* ── LOGO ── */
     .logo { perspective: 800px; }
     .logo img {
-      height: 72px;
+      height: 96px;
       width: auto;
       display: block;
       transition: transform 1.5s ease;
@@ -93,11 +41,10 @@
 
     @keyframes logoPulse {
       0%   { filter: drop-shadow(0 0 0px rgba(220,230,255,0)); }
-      50%  { filter: drop-shadow(0 0 40px rgba(200,220,255,1)) drop-shadow(0 0 80px rgba(160,200,255,0.9)); }
+      50%  { filter: drop-shadow(0 0 40px rgba(200,220,255,1)) drop-shadow(0 0 80px rgba(160,200,255,0.9)) drop-shadow(0 0 120px rgba(120,180,255,0.8)); }
       100% { filter: drop-shadow(0 0 0px rgba(220,230,255,0)); }
     }
 
-    /* ── DESKTOP NAV ── */
     nav {
       display: flex;
       align-items: center;
@@ -105,42 +52,28 @@
     }
 
     nav a {
-      font-family: 'Syne', sans-serif;
-      color: rgba(255,255,255,0.75);
+      color: white;
       text-decoration: none;
-      font-size: 15px;
-      font-weight: 600;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      position: relative;
-      transition: color 0.2s ease;
+      font-family: Inter, sans-serif;
+      font-size: 24px;
+      transition: opacity 0.2s ease;
     }
 
-    nav a::after {
-      content: '';
-      position: absolute;
-      bottom: -4px; left: 0;
-      width: 0; height: 1.5px;
-      background: var(--accent);
-      transition: width 0.3s var(--ease-out-expo);
-    }
-
-    nav a:hover { color: white; }
-    nav a:hover::after { width: 100%; }
+    nav a:hover { opacity: 0.6; }
 
     /* ── HAMBURGER ── */
     .hamburger {
       display: none;
       flex-direction: column;
       justify-content: center;
-      gap: 5px;
-      width: 36px;
-      height: 36px;
+      gap: 6px;
+      width: 40px;
+      height: 40px;
       cursor: pointer;
-      z-index: 1100;
       background: none;
       border: none;
       padding: 0;
+      z-index: 1100;
     }
 
     .hamburger span {
@@ -148,34 +81,31 @@
       height: 2px;
       background: white;
       border-radius: 2px;
-      transition: transform 0.35s var(--ease-out-expo), opacity 0.25s ease, width 0.3s ease;
-      transform-origin: center;
+      transition: transform 0.35s var(--ease-out-expo), opacity 0.25s ease;
     }
 
     .hamburger span:nth-child(1) { width: 28px; }
     .hamburger span:nth-child(2) { width: 20px; }
     .hamburger span:nth-child(3) { width: 24px; }
 
-    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); width: 28px; }
+    .hamburger.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); width: 28px; }
     .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
-    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); width: 28px; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); width: 28px; }
 
     /* ── MOBILE MENU ── */
     .mobile-menu {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.96);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
+      background: rgba(0,0,0,0.97);
       z-index: 1050;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 40px;
+      gap: 36px;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.4s ease;
+      transition: opacity 0.35s ease;
     }
 
     .mobile-menu.open {
@@ -184,22 +114,24 @@
     }
 
     .mobile-menu a {
-      font-family: 'Syne', sans-serif;
-      font-size: 36px;
-      font-weight: 800;
+      font-family: Inter, sans-serif;
+      font-size: 32px;
+      font-weight: 700;
       color: white;
       text-decoration: none;
-      letter-spacing: -0.01em;
       opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.4s ease, transform 0.4s var(--ease-out-expo), color 0.2s ease;
+      transform: translateY(18px);
+      transition: opacity 0.4s ease, transform 0.4s var(--ease-out-expo);
     }
 
-    .mobile-menu.open a {
-      opacity: 1;
-      transform: translateY(0);
+    .mobile-menu a:hover {
+      background: linear-gradient(90deg, #aac8de, #ffffff, #8aaabb, #ffffff, #aac8de);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
+    .mobile-menu.open a { opacity: 1; transform: translateY(0); }
     .mobile-menu.open a:nth-child(1) { transition-delay: 0.05s; }
     .mobile-menu.open a:nth-child(2) { transition-delay: 0.10s; }
     .mobile-menu.open a:nth-child(3) { transition-delay: 0.15s; }
@@ -207,247 +139,162 @@
     .mobile-menu.open a:nth-child(5) { transition-delay: 0.25s; }
     .mobile-menu.open a:nth-child(6) { transition-delay: 0.30s; }
 
-    .mobile-menu a:hover { color: var(--accent); }
-
-    /* ── MAIN ── */
-    main {
-      position: relative;
-      z-index: 1;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 140px 40px 80px;
-    }
-
-    /* ── HERO SECTION ── */
+    /* ── HOME CONTAINER ── */
     .home-container {
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
-      gap: 0;
-      width: 100%;
-      max-width: 900px;
     }
 
-    /* ── EYEBROW ── */
-    .home-eyebrow {
-      font-family: 'Syne', sans-serif;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 18px;
-      opacity: 0;
-      transform: translateY(16px);
-      animation: fadeUp 0.7s var(--ease-out-expo) 0.2s forwards;
-    }
-
-    /* ── NAME ── */
+    /* ── Y2K CHROME NAME ── */
     .home-name {
-      font-family: 'Syne', sans-serif;
-      font-size: clamp(48px, 8vw, 96px);
-      font-weight: 800;
-      line-height: 0.95;
-      letter-spacing: -0.03em;
-      margin-bottom: 24px;
-      background: linear-gradient(135deg, #fff 30%, var(--accent2) 70%, var(--accent) 100%);
+      font-size: 36px;
+      font-weight: 700;
+      margin-bottom: 30px;
+      display: inline-block;
+
+      background: linear-gradient(
+        180deg,
+        #ffffff 0%,
+        #d4e8f8 15%,
+        #7aaabb 32%,
+        #ffffff 48%,
+        #b8d4ec 64%,
+        #5a8899 78%,
+        #e8f4ff 100%
+      );
+      background-size: 100% 300%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      opacity: 0;
-      transform: translateY(24px);
-      animation: fadeUp 0.8s var(--ease-out-expo) 0.35s forwards;
+
+      animation: chromeShimmer 3.5s ease-in-out infinite;
+    }
+
+    @keyframes chromeShimmer {
+      0%   { background-position: 0% 0%; }
+      50%  { background-position: 0% 100%; }
+      100% { background-position: 0% 0%; }
     }
 
     /* ── PHOTO ── */
-    .home-photo-wrap {
-      position: relative;
-      margin-bottom: 32px;
-      opacity: 0;
-      transform: translateY(28px) scale(0.97);
-      animation: fadeUp 0.9s var(--ease-out-expo) 0.5s forwards;
-    }
-
-    .home-photo-wrap::before {
-      content: '';
-      position: absolute;
-      inset: -2px;
-      border-radius: 18px;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      z-index: -1;
-      opacity: 0.5;
-      filter: blur(12px);
-    }
-
     .home-photo {
-      width: 420px;
+      width: 520px;
       max-width: 100%;
       height: auto;
-      border-radius: 16px;
-      display: block;
-      border: 1px solid var(--glass-border);
+      border-radius: 14px;
+      margin-bottom: 0;
+      transition: filter 0.4s ease, transform 0.4s var(--ease-out-expo);
     }
 
-    /* ── TAGLINE ── */
+    .home-photo:hover {
+      filter: drop-shadow(0 0 20px rgba(180,220,255,0.65)) drop-shadow(0 0 50px rgba(140,190,240,0.35));
+      transform: scale(1.012);
+    }
+
+    /* ── TAGLINE (travelling chrome shimmer) ── */
     .home-tagline {
-      font-family: 'Syne', sans-serif;
-      font-size: clamp(18px, 3vw, 26px);
-      font-weight: 600;
-      color: rgba(255,255,255,0.7);
-      margin-bottom: 48px;
-      letter-spacing: 0.01em;
-      opacity: 0;
-      transform: translateY(20px);
-      animation: fadeUp 0.8s var(--ease-out-expo) 0.65s forwards;
+      font-size: 36px;
+      font-weight: 700;
+      margin-bottom: 30px;
+      display: inline-block;
+
+      background: linear-gradient(
+        90deg,
+        #b0c8dc 0%,
+        #ffffff 20%,
+        #8aaabb 40%,
+        #ffffff 60%,
+        #b0c8dc 80%,
+        #ffffff 100%
+      );
+      background-size: 250% 100%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+
+      animation: taglineSlide 4s linear infinite;
     }
 
-    /* ── INFO GRID ── */
+    @keyframes taglineSlide {
+      0%   { background-position: 0% 0%; }
+      100% { background-position: 250% 0%; }
+    }
+
+    /* ── INFO GRID (unchanged structure) ── */
     .info-grid {
       display: flex;
       justify-content: center;
+      gap: 140px;
+      margin-top: 20px;
+    }
+
+    .contact-block, .social-block { text-align: center; }
+
+    .contact-block h3, .social-block h3 {
+      font-size: 24px;
+      margin-bottom: 18px;
+    }
+
+    .contact-info {
+      font-size: 18px;
+      margin-bottom: 6px;
+    }
+
+    .contact-info a { color: white; text-decoration: none; }
+    .contact-info a:hover { opacity: 0.7; }
+
+    .social-links {
+      display: flex;
+      justify-content: center;
       gap: 24px;
-      flex-wrap: wrap;
-      opacity: 0;
-      transform: translateY(20px);
-      animation: fadeUp 0.8s var(--ease-out-expo) 0.8s forwards;
+      margin-top: 16px;
     }
 
-    /* ── GLASS CARD ── */
-    .glass-card {
-      background: var(--glass);
-      border: 1px solid var(--glass-border);
-      border-radius: 16px;
-      padding: 28px 36px;
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      transition: transform 0.3s var(--ease-out-expo), border-color 0.3s ease, background 0.3s ease;
+    .social-links img {
+      width: 48px;
+      height: 48px;
+      transition: transform 0.3s var(--ease-out-expo), filter 0.3s ease;
     }
 
-    .glass-card:hover {
-      transform: translateY(-4px);
-      border-color: rgba(126,184,255,0.25);
-      background: rgba(255,255,255,0.07);
+    .social-links img:hover {
+      transform: translateY(-4px) scale(1.1);
+      filter: drop-shadow(0 0 10px rgba(200,230,255,0.8));
     }
-
-    .glass-card h3 {
-      font-family: 'Syne', sans-serif;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 16px;
-    }
-
-    /* ── CONTACT ROWS ── */
-    .contact-info { display: flex; flex-direction: column; gap: 10px; }
 
     .contact-row {
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: 10px;
-      justify-content: flex-start;
+      margin-bottom: 0;
     }
 
-    .contact-row img { width: 20px; height: 20px; opacity: 0.8; }
+    .contact-row img { width: 32px; height: 32px; }
 
     .contact-row a {
-      color: rgba(255,255,255,0.8);
-      text-decoration: none;
-      font-size: 15px;
-      transition: color 0.2s ease;
+      color: white;
+      text-decoration: underline;
+      font-size: 18px;
     }
 
-    .contact-row a:hover { color: white; }
+    .contact-row a:hover { opacity: 0.7; }
 
-    /* ── SOCIAL LINKS ── */
-    .social-links {
-      display: flex;
-      justify-content: center;
-      gap: 18px;
-      margin-top: 4px;
-    }
-
-    .social-links a {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 46px;
-      height: 46px;
-      border-radius: 50%;
-      border: 1px solid var(--glass-border);
-      background: var(--glass);
-      transition: transform 0.25s var(--ease-out-expo), border-color 0.25s ease, background 0.25s ease;
-    }
-
-    .social-links a:hover {
-      transform: translateY(-3px) scale(1.08);
-      border-color: var(--accent);
-      background: rgba(126,184,255,0.1);
-    }
-
-    .social-links img { width: 22px; height: 22px; }
-
-    /* ── SCROLL INDICATOR ── */
-    .scroll-indicator {
-      position: fixed;
-      bottom: 36px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-      opacity: 0;
-      animation: fadeUp 0.8s ease 1.4s forwards;
-      z-index: 10;
-    }
-
-    .scroll-indicator span {
-      font-family: 'Syne', sans-serif;
-      font-size: 10px;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.3);
-    }
-
-    .scroll-line {
-      width: 1px;
-      height: 40px;
-      background: linear-gradient(to bottom, rgba(255,255,255,0.3), transparent);
-      animation: scrollPulse 2s ease-in-out infinite;
-    }
-
-    @keyframes scrollPulse {
-      0%, 100% { opacity: 0.3; transform: scaleY(1); }
-      50% { opacity: 1; transform: scaleY(1.1); }
-    }
-
-    /* ── FOOTER ── */
     footer {
-      position: relative;
-      z-index: 1;
       text-align: center;
-      padding: 24px 40px;
-      font-size: 13px;
-      color: rgba(255,255,255,0.3);
-      letter-spacing: 0.05em;
-      font-family: 'Syne', sans-serif;
+      padding: 20px 40px;
+      font-size: 16px;
+      opacity: 0.6;
     }
 
-    /* ── KEYFRAMES ── */
-    @keyframes fadeUp {
-      to { opacity: 1; transform: translateY(0) scale(1); }
-    }
+    /* ══════════════════════════
+       SCROLL REVEAL
+    ══════════════════════════ */
 
-    /* ── SCROLL-REVEAL ── */
     .reveal {
       opacity: 0;
-      transform: translateY(32px);
+      transform: translateY(40px);
       transition: opacity 0.8s var(--ease-out-expo), transform 0.8s var(--ease-out-expo);
     }
 
@@ -456,21 +303,30 @@
       transform: translateY(0);
     }
 
+    /* stagger for info grid children */
+    .reveal-stagger > * {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.65s var(--ease-out-expo), transform 0.65s var(--ease-out-expo);
+    }
+
+    .reveal-stagger.visible > *:nth-child(1) { opacity: 1; transform: none; transition-delay: 0.05s; }
+    .reveal-stagger.visible > *:nth-child(2) { opacity: 1; transform: none; transition-delay: 0.2s; }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 768px) {
-      header { padding: 16px 24px; }
-      header.scrolled { padding: 12px 24px; }
-
+      header { padding: 20px 24px; }
       nav { display: none; }
       .hamburger { display: flex; }
       .mobile-menu { display: flex; }
 
-      main { padding: 120px 24px 80px; }
-
+      main { padding: 160px 24px 60px; }
       .home-photo { width: 300px; }
-      .info-grid { flex-direction: column; align-items: center; }
-      .glass-card { width: 100%; max-width: 320px; }
+      .info-grid { gap: 48px; flex-direction: column; align-items: center; }
+      .home-name { font-size: 28px; }
+      .home-tagline { font-size: 24px; }
     }
+
   </style>
 </head>
 <body class="home">
@@ -485,7 +341,7 @@
     <a href="yearinreview.html">Year in Review</a>
   </div>
 
-  <header id="mainHeader">
+  <header>
     <div class="logo">
       <a href="index.html">
         <img src="assets/logo.png" alt="Aayush Layane logo">
@@ -509,43 +365,42 @@
   <main>
     <div class="home-container">
 
-      <p class="home-eyebrow">Portfolio — 2026</p>
+      <h1 class="home-name reveal">Aayush Layane</h1>
 
-      <h1 class="home-name">Aayush Layane</h1>
-
-      <div class="home-photo-wrap">
+      <div class="reveal">
         <img src="assets/myphoto.jpg" alt="Aayush Layane" class="home-photo">
       </div>
 
-      <h2 class="home-tagline">Welcome to my WRLD!!</h2>
+      <h2 class="home-tagline reveal">Welcome to my WRLD!!</h2>
 
-      <div class="info-grid">
-        <div class="glass-card contact-block reveal">
-          <h3>Contact</h3>
-          <div class="contact-info">
-            <div class="contact-row">
-              <img src="assets/phone.png" alt="Phone">
-              <a href="tel:+15132238771">Phone</a>
-            </div>
-            <div class="contact-row">
-              <img src="assets/mail.png" alt="Email">
-              <a href="mailto:aayush.layane007@gmail.com">Mail</a>
+      <div class="contact-section">
+        <div class="info-grid reveal-stagger">
+          <div class="contact-block">
+            <h3>Contact</h3>
+            <div class="contact-info">
+              <div class="contact-row">
+                <img src="assets/phone.png" alt="Phone">
+                <a href="tel:+15132238771">Phone</a>
+              </div>
+              <div class="contact-row">
+                <img src="assets/mail.png" alt="Email">
+                <a href="mailto:aayush.layane007@gmail.com">Mail</a>
+              </div>
             </div>
           </div>
-        </div>
-
-        <div class="glass-card social-block reveal">
-          <h3>Socials</h3>
-          <div class="social-links">
-            <a href="https://www.instagram.com/aayush._.999/" target="_blank">
-              <img src="assets/instagram.png" alt="Instagram">
-            </a>
-            <a href="https://www.linkedin.com/feed/" target="_blank">
-              <img src="assets/linkedin.png" alt="LinkedIn">
-            </a>
-            <a href="https://github.com/aayushlayane007-byte" target="_blank">
-              <img src="assets/github.png" alt="GitHub">
-            </a>
+          <div class="social-block">
+            <h3>Socials</h3>
+            <div class="social-links">
+              <a href="https://www.instagram.com/aayush._.999/" target="_blank">
+                <img src="assets/instagram.png" alt="Instagram">
+              </a>
+              <a href="https://www.linkedin.com/feed/" target="_blank">
+                <img src="assets/linkedin.png" alt="LinkedIn">
+              </a>
+              <a href="https://github.com/aayushlayane007-byte" target="_blank">
+                <img src="assets/github.png" alt="GitHub">
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -553,24 +408,12 @@
     </div>
   </main>
 
-  <!-- SCROLL INDICATOR -->
-  <div class="scroll-indicator">
-    <span>Scroll</span>
-    <div class="scroll-line"></div>
-  </div>
-
   <footer>
     <p>© 2026 Aayush Layane</p>
   </footer>
 
   <script>
-    // ── HEADER SHRINK ON SCROLL ──
-    const header = document.getElementById('mainHeader');
-    window.addEventListener('scroll', () => {
-      header.classList.toggle('scrolled', window.scrollY > 40);
-    });
-
-    // ── HAMBURGER MENU ──
+    // ── HAMBURGER ──
     const hamburger = document.getElementById('hamburger');
     const mobileMenu = document.getElementById('mobileMenu');
 
@@ -589,7 +432,7 @@
     });
 
     // ── SCROLL REVEAL ──
-    const revealEls = document.querySelectorAll('.reveal');
+    const revealEls = document.querySelectorAll('.reveal, .reveal-stagger');
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -597,7 +440,7 @@
           observer.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.15 });
+    }, { threshold: 0.12 });
 
     revealEls.forEach(el => observer.observe(el));
   </script>
