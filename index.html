@@ -8,14 +8,106 @@
   <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
   <link rel="stylesheet" href="styles.css">
   <style>
-
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
       --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    /* ── HEADER (original size restored) ── */
+    /* ─────────────────────────────
+       INTRO OVERLAY
+    ───────────────────────────── */
+    #intro {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      pointer-events: all;
+    }
+
+    #intro.done {
+      opacity: 0;
+      transition: opacity 0.6s ease 0.2s;
+      pointer-events: none;
+    }
+
+    #star {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      left: -60px;
+      top: 50%;
+      transform: translateY(-50%);
+      opacity: 0;
+    }
+
+    /* 4-point chrome star */
+    #star::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 38% 28%,
+        #ffffff 0%,
+        #e0f0ff 18%,
+        #88b8cc 42%,
+        #1a2830 75%,
+        #000 100%
+      );
+      clip-path: polygon(
+        50% 0%, 56% 38%, 100% 50%,
+        56% 62%, 50% 100%, 44% 62%,
+        0% 50%, 44% 38%
+      );
+      filter:
+        drop-shadow(0 0 10px rgba(200,235,255,0.95))
+        drop-shadow(0 0 28px rgba(140,195,225,0.7));
+    }
+
+    #trailCanvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Chrome name shown during intro */
+    #introName {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%) scale(0.88);
+      font-family: Inter, sans-serif;
+      font-size: clamp(32px, 5.5vw, 68px);
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+      opacity: 0;
+      /* deep liquid chrome gradient — matches reference image */
+      background: linear-gradient(
+        160deg,
+        #ffffff   0%,
+        #e4f2ff  8%,
+        #aacadc  20%,
+        #4a6a76  35%,
+        #080e12  50%,
+        #385868  62%,
+        #b0cee0  76%,
+        #f8fdff  88%,
+        #c4daea  100%
+      );
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 3px 10px rgba(0,0,0,0.95));
+    }
+
+    /* ─────────────────────────────
+       HEADER (original)
+    ───────────────────────────── */
     header {
       position: fixed;
       top: 0; left: 0; right: 0;
@@ -30,9 +122,7 @@
 
     .logo { perspective: 800px; }
     .logo img {
-      height: 96px;
-      width: auto;
-      display: block;
+      height: 96px; width: auto; display: block;
       transition: transform 1.5s ease;
       transform-style: preserve-3d;
       animation: logoPulse 3s ease-in-out infinite;
@@ -45,92 +135,46 @@
       100% { filter: drop-shadow(0 0 0px rgba(220,230,255,0)); }
     }
 
-    nav {
-      display: flex;
-      align-items: center;
-      gap: 36px;
-    }
-
+    nav { display: flex; align-items: center; gap: 36px; }
     nav a {
-      color: white;
-      text-decoration: none;
-      font-family: Inter, sans-serif;
-      font-size: 24px;
+      color: white; text-decoration: none;
+      font-family: Inter, sans-serif; font-size: 24px;
       transition: opacity 0.2s ease;
     }
-
     nav a:hover { opacity: 0.6; }
 
     /* ── HAMBURGER ── */
     .hamburger {
-      display: none;
-      flex-direction: column;
-      justify-content: center;
-      gap: 6px;
-      width: 40px;
-      height: 40px;
-      cursor: pointer;
-      background: none;
-      border: none;
-      padding: 0;
-      z-index: 1100;
+      display: none; flex-direction: column;
+      justify-content: center; gap: 6px;
+      width: 40px; height: 40px;
+      cursor: pointer; background: none; border: none; padding: 0; z-index: 1100;
     }
-
     .hamburger span {
-      display: block;
-      height: 2px;
-      background: white;
-      border-radius: 2px;
+      display: block; height: 2px; background: white; border-radius: 2px;
       transition: transform 0.35s var(--ease-out-expo), opacity 0.25s ease;
     }
-
     .hamburger span:nth-child(1) { width: 28px; }
     .hamburger span:nth-child(2) { width: 20px; }
     .hamburger span:nth-child(3) { width: 24px; }
-
     .hamburger.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); width: 28px; }
     .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
     .hamburger.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); width: 28px; }
 
     /* ── MOBILE MENU ── */
     .mobile-menu {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.97);
-      z-index: 1050;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 36px;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.35s ease;
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.97); z-index: 1050;
+      flex-direction: column; align-items: center; justify-content: center; gap: 36px;
+      opacity: 0; pointer-events: none; transition: opacity 0.35s ease;
     }
-
-    .mobile-menu.open {
-      opacity: 1;
-      pointer-events: all;
-    }
-
+    .mobile-menu.open { opacity: 1; pointer-events: all; }
     .mobile-menu a {
-      font-family: Inter, sans-serif;
-      font-size: 32px;
-      font-weight: 700;
-      color: white;
-      text-decoration: none;
-      opacity: 0;
-      transform: translateY(18px);
+      font-family: Inter, sans-serif; font-size: 32px; font-weight: 700;
+      color: white; text-decoration: none;
+      opacity: 0; transform: translateY(18px);
       transition: opacity 0.4s ease, transform 0.4s var(--ease-out-expo);
     }
-
-    .mobile-menu a:hover {
-      background: linear-gradient(90deg, #aac8de, #ffffff, #8aaabb, #ffffff, #aac8de);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
     .mobile-menu.open a { opacity: 1; transform: translateY(0); }
     .mobile-menu.open a:nth-child(1) { transition-delay: 0.05s; }
     .mobile-menu.open a:nth-child(2) { transition-delay: 0.10s; }
@@ -138,8 +182,17 @@
     .mobile-menu.open a:nth-child(4) { transition-delay: 0.20s; }
     .mobile-menu.open a:nth-child(5) { transition-delay: 0.25s; }
     .mobile-menu.open a:nth-child(6) { transition-delay: 0.30s; }
+    .mobile-menu a:hover { opacity: 0.6 !important; }
 
-    /* ── HOME CONTAINER ── */
+    /* ─────────────────────────────
+       MAIN
+    ───────────────────────────── */
+    main {
+      flex: 1;
+      padding: 180px 40px 60px 40px;
+      box-sizing: border-box;
+    }
+
     .home-container {
       display: flex;
       flex-direction: column;
@@ -147,189 +200,143 @@
       text-align: center;
     }
 
-    /* ── Y2K CHROME NAME ── */
+    /* Clicking name replays intro */
     .home-name {
-      font-size: 36px;
-      font-weight: 700;
-      margin-bottom: 30px;
-      display: inline-block;
-
-      background: linear-gradient(
-        180deg,
-        #ffffff 0%,
-        #d4e8f8 15%,
-        #7aaabb 32%,
-        #ffffff 48%,
-        #b8d4ec 64%,
-        #5a8899 78%,
-        #e8f4ff 100%
-      );
-      background-size: 100% 300%;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-
-      animation: chromeShimmer 3.5s ease-in-out infinite;
+      font-size: 36px; font-weight: 700;
+      margin-bottom: 30px; color: white;
+      cursor: pointer;
+      transition: opacity 0.2s ease;
     }
+    .home-name:hover { opacity: 0.7; }
 
-    @keyframes chromeShimmer {
-      0%   { background-position: 0% 0%; }
-      50%  { background-position: 0% 100%; }
-      100% { background-position: 0% 0%; }
-    }
-
-    /* ── PHOTO ── */
     .home-photo {
-      width: 520px;
-      max-width: 100%;
-      height: auto;
-      border-radius: 14px;
-      margin-bottom: 0;
-      transition: filter 0.4s ease, transform 0.4s var(--ease-out-expo);
+      width: 520px; max-width: 100%; height: auto;
+      border-radius: 14px; margin-bottom: 0;
     }
 
-    .home-photo:hover {
-      filter: drop-shadow(0 0 20px rgba(180,220,255,0.65)) drop-shadow(0 0 50px rgba(140,190,240,0.35));
-      transform: scale(1.012);
-    }
-
-    /* ── TAGLINE (travelling chrome shimmer) ── */
     .home-tagline {
-      font-size: 36px;
-      font-weight: 700;
-      margin-bottom: 30px;
-      display: inline-block;
-
-      background: linear-gradient(
-        90deg,
-        #b0c8dc 0%,
-        #ffffff 20%,
-        #8aaabb 40%,
-        #ffffff 60%,
-        #b0c8dc 80%,
-        #ffffff 100%
-      );
-      background-size: 250% 100%;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-
-      animation: taglineSlide 4s linear infinite;
+      font-size: 36px; font-weight: 700;
+      margin-bottom: 0; color: white;
     }
 
-    @keyframes taglineSlide {
-      0%   { background-position: 0% 0%; }
-      100% { background-position: 250% 0%; }
+    /* ─────────────────────────────
+       MARQUEE
+    ───────────────────────────── */
+    .marquee-wrap {
+      width: 100vw;
+      margin-left: calc(-50vw + 50%);
+      overflow: hidden;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding: 14px 0;
+      margin-top: 48px;
+      margin-bottom: 48px;
     }
 
-    /* ── INFO GRID (unchanged structure) ── */
-    .info-grid {
+    .marquee-track {
       display: flex;
-      justify-content: center;
-      gap: 140px;
-      margin-top: 20px;
+      animation: marqueeScroll 20s linear infinite;
+      white-space: nowrap;
+    }
+
+    .marquee-track span {
+      font-family: Inter, sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      padding: 0 28px;
+    }
+
+    .marquee-track span.sep {
+      color: rgba(255,255,255,0.12);
+      padding: 0;
+      letter-spacing: 0;
+    }
+
+    @keyframes marqueeScroll {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* ─────────────────────────────
+       INFO GRID
+    ───────────────────────────── */
+    .info-grid {
+      display: flex; justify-content: center;
+      gap: 140px; margin-top: 20px;
     }
 
     .contact-block, .social-block { text-align: center; }
-
-    .contact-block h3, .social-block h3 {
-      font-size: 24px;
-      margin-bottom: 18px;
-    }
-
-    .contact-info {
-      font-size: 18px;
-      margin-bottom: 6px;
-    }
-
+    .contact-block h3, .social-block h3 { font-size: 24px; margin-bottom: 18px; }
+    .contact-info { font-size: 18px; margin-bottom: 6px; }
     .contact-info a { color: white; text-decoration: none; }
     .contact-info a:hover { opacity: 0.7; }
 
-    .social-links {
-      display: flex;
-      justify-content: center;
-      gap: 24px;
-      margin-top: 16px;
-    }
-
+    .social-links { display: flex; justify-content: center; gap: 24px; margin-top: 16px; }
     .social-links img {
-      width: 48px;
-      height: 48px;
+      width: 48px; height: 48px;
       transition: transform 0.3s var(--ease-out-expo), filter 0.3s ease;
     }
-
     .social-links img:hover {
       transform: translateY(-4px) scale(1.1);
-      filter: drop-shadow(0 0 10px rgba(200,230,255,0.8));
+      filter: drop-shadow(0 0 8px rgba(200,230,255,0.7));
     }
 
     .contact-row {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      margin-bottom: 0;
+      display: flex; align-items: center;
+      justify-content: center; gap: 10px; margin-bottom: 0;
     }
-
     .contact-row img { width: 32px; height: 32px; }
-
-    .contact-row a {
-      color: white;
-      text-decoration: underline;
-      font-size: 18px;
-    }
-
+    .contact-row a { color: white; text-decoration: underline; font-size: 18px; }
     .contact-row a:hover { opacity: 0.7; }
 
     footer {
-      text-align: center;
-      padding: 20px 40px;
-      font-size: 16px;
-      opacity: 0.6;
+      text-align: center; padding: 20px 40px;
+      font-size: 16px; opacity: 0.6;
     }
 
-    /* ══════════════════════════
+    /* ─────────────────────────────
        SCROLL REVEAL
-    ══════════════════════════ */
-
+    ───────────────────────────── */
     .reveal {
-      opacity: 0;
-      transform: translateY(40px);
+      opacity: 0; transform: translateY(36px);
       transition: opacity 0.8s var(--ease-out-expo), transform 0.8s var(--ease-out-expo);
     }
+    .reveal.visible { opacity: 1; transform: none; }
 
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* stagger for info grid children */
     .reveal-stagger > * {
-      opacity: 0;
-      transform: translateY(24px);
+      opacity: 0; transform: translateY(24px);
       transition: opacity 0.65s var(--ease-out-expo), transform 0.65s var(--ease-out-expo);
     }
-
     .reveal-stagger.visible > *:nth-child(1) { opacity: 1; transform: none; transition-delay: 0.05s; }
     .reveal-stagger.visible > *:nth-child(2) { opacity: 1; transform: none; transition-delay: 0.2s; }
 
-    /* ── RESPONSIVE ── */
+    /* ─────────────────────────────
+       RESPONSIVE
+    ───────────────────────────── */
     @media (max-width: 768px) {
       header { padding: 20px 24px; }
       nav { display: none; }
       .hamburger { display: flex; }
       .mobile-menu { display: flex; }
-
       main { padding: 160px 24px 60px; }
       .home-photo { width: 300px; }
       .info-grid { gap: 48px; flex-direction: column; align-items: center; }
       .home-name { font-size: 28px; }
       .home-tagline { font-size: 24px; }
     }
-
   </style>
 </head>
 <body class="home">
+
+  <!-- ══════ INTRO ══════ -->
+  <div id="intro">
+    <canvas id="trailCanvas"></canvas>
+    <div id="star"></div>
+    <div id="introName">Aayush Layane</div>
+  </div>
 
   <!-- MOBILE MENU -->
   <div class="mobile-menu" id="mobileMenu">
@@ -343,9 +350,7 @@
 
   <header>
     <div class="logo">
-      <a href="index.html">
-        <img src="assets/logo.png" alt="Aayush Layane logo">
-      </a>
+      <a href="index.html"><img src="assets/logo.png" alt="Aayush Layane logo"></a>
     </div>
     <nav>
       <a href="index.html">Home</a>
@@ -356,22 +361,25 @@
       <a href="yearinreview.html">Year in Review</a>
     </nav>
     <button class="hamburger" id="hamburger" aria-label="Toggle menu">
-      <span></span>
-      <span></span>
-      <span></span>
+      <span></span><span></span><span></span>
     </button>
   </header>
 
   <main>
     <div class="home-container">
 
-      <h1 class="home-name reveal">Aayush Layane</h1>
+      <h1 class="home-name reveal" id="homeName">Aayush Layane</h1>
 
       <div class="reveal">
         <img src="assets/myphoto.jpg" alt="Aayush Layane" class="home-photo">
       </div>
 
       <h2 class="home-tagline reveal">Welcome to my WRLD!!</h2>
+
+      <!-- MARQUEE -->
+      <div class="marquee-wrap reveal">
+        <div class="marquee-track" id="marqueeTrack"></div>
+      </div>
 
       <div class="contact-section">
         <div class="info-grid reveal-stagger">
@@ -408,41 +416,175 @@
     </div>
   </main>
 
-  <footer>
-    <p>© 2026 Aayush Layane</p>
-  </footer>
+  <footer><p>© 2026 Aayush Layane</p></footer>
 
   <script>
-    // ── HAMBURGER ──
-    const hamburger = document.getElementById('hamburger');
-    const mobileMenu = document.getElementById('mobileMenu');
-
-    hamburger.addEventListener('click', () => {
-      const isOpen = mobileMenu.classList.toggle('open');
-      hamburger.classList.toggle('open', isOpen);
-      document.body.style.overflow = isOpen ? 'hidden' : '';
+  // ── BUILD MARQUEE ──
+  const marqueeItems = ['Aayush Layane','About','Experiences','Gateway','Interests','Year in Review'];
+  const track = document.getElementById('marqueeTrack');
+  let html = '';
+  // two copies for seamless loop
+  for (let c = 0; c < 2; c++) {
+    marqueeItems.forEach(item => {
+      html += `<span>${item}</span><span class="sep">✦</span>`;
     });
+  }
+  track.innerHTML = html;
 
-    mobileMenu.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        mobileMenu.classList.remove('open');
-        hamburger.classList.remove('open');
-        document.body.style.overflow = '';
-      });
-    });
+  // ══════════════════════════════════════════════
+  //  CHROME SHOOTING STAR INTRO
+  // ══════════════════════════════════════════════
+  function runIntro() {
+    const intro  = document.getElementById('intro');
+    const star   = document.getElementById('star');
+    const nameEl = document.getElementById('introName');
+    const canvas = document.getElementById('trailCanvas');
+    const ctx    = canvas.getContext('2d');
 
-    // ── SCROLL REVEAL ──
-    const revealEls = document.querySelectorAll('.reveal, .reveal-stagger');
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          observer.unobserve(entry.target);
+    // reset
+    intro.style.display = 'flex';
+    intro.style.opacity = '1';
+    intro.style.transition = 'none';
+    intro.classList.remove('done');
+    intro.style.pointerEvents = 'all';
+
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    const W  = canvas.width;
+    const H  = canvas.height;
+    const CY = H / 2;
+
+    const particles = [];
+    let startTime   = null;
+    const DURATION  = 950;
+
+    star.style.opacity    = '1';
+    star.style.transition = 'none';
+    star.style.left = '-60px';
+    star.style.top  = (CY - 20) + 'px';
+
+    nameEl.style.transition = 'none';
+    nameEl.style.opacity    = '0';
+    nameEl.style.transform  = 'translate(-50%, -50%) scale(0.88)';
+
+    function spawnParticles(x, y) {
+      for (let i = 0; i < 7; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const spd   = 0.6 + Math.random() * 2.2;
+        const life  = 280 + Math.random() * 420;
+        const size  = 1.2 + Math.random() * 2.8;
+        const lum   = 60 + Math.floor(Math.random() * 180);
+        particles.push({
+          x, y,
+          vx: Math.cos(angle) * spd * 0.25 - spd * 0.85,
+          vy: Math.sin(angle) * spd * 0.55,
+          life, maxLife: life, size, lum
+        });
+      }
+    }
+
+    function drawParticles() {
+      ctx.clearRect(0, 0, W, H);
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        const t = p.life / p.maxLife;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size * t, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${p.lum},${Math.min(p.lum+12,255)},${Math.min(p.lum+22,255)},${t * t})`;
+        ctx.fill();
+        p.x   += p.vx;
+        p.y   += p.vy;
+        p.life -= 16;
+        if (p.life <= 0) particles.splice(i, 1);
+      }
+    }
+
+    function animateStar(ts) {
+      if (!startTime) startTime = ts;
+      const elapsed  = ts - startTime;
+      const progress = Math.min(elapsed / DURATION, 1);
+      // easeInOutQuad
+      const ease = progress < 0.5
+        ? 2 * progress * progress
+        : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+
+      const starX = -60 + (W + 120) * ease;
+      star.style.left = starX + 'px';
+
+      if (progress < 1) spawnParticles(starX + 20, CY);
+      drawParticles();
+
+      if (progress < 1) {
+        requestAnimationFrame(animateStar);
+      } else {
+        // star exits — fade it
+        star.style.transition = 'opacity 0.2s ease';
+        star.style.opacity = '0';
+
+        // drain trail
+        function drain(ts2) {
+          drawParticles();
+          if (particles.length > 0) requestAnimationFrame(drain);
+          else ctx.clearRect(0, 0, W, H);
         }
-      });
-    }, { threshold: 0.12 });
+        requestAnimationFrame(drain);
 
-    revealEls.forEach(el => observer.observe(el));
+        // reveal chrome name
+        setTimeout(() => {
+          nameEl.style.transition = 'opacity 0.65s ease, transform 0.65s cubic-bezier(0.16,1,0.3,1)';
+          nameEl.style.opacity    = '1';
+          nameEl.style.transform  = 'translate(-50%, -50%) scale(1)';
+
+          // hold, then fade whole overlay out
+          setTimeout(() => {
+            intro.style.transition = 'opacity 0.55s ease';
+            intro.classList.add('done');
+            setTimeout(() => { intro.style.display = 'none'; }, 750);
+          }, 950);
+        }, 180);
+      }
+    }
+
+    requestAnimationFrame(animateStar);
+  }
+
+  // auto-run on load
+  window.addEventListener('load', () => setTimeout(runIntro, 150));
+
+  // re-run on name click
+  document.getElementById('homeName').addEventListener('click', runIntro);
+
+  // ── HAMBURGER ──
+  const hamburger  = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobileMenu');
+
+  hamburger.addEventListener('click', () => {
+    const isOpen = mobileMenu.classList.toggle('open');
+    hamburger.classList.toggle('open', isOpen);
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  });
+
+  mobileMenu.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      mobileMenu.classList.remove('open');
+      hamburger.classList.remove('open');
+      document.body.style.overflow = '';
+    });
+  });
+
+  // ── SCROLL REVEAL ──
+  const revealEls = document.querySelectorAll('.reveal, .reveal-stagger');
+  const observer  = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => observer.observe(el));
   </script>
 
 </body>
