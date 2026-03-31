@@ -239,13 +239,13 @@
   //  WEBGL MERCURY METABALL FLUID INTRO
   // ══════════════════════════════════════════════════════════
   // ══════════════════════════════════════════════════════════
-  //  LIQUID METAL SWEEP INTRO
+  //  LIQUID METAL CURRENT INTRO
   // ══════════════════════════════════════════════════════════
   (function () {
     const introEl = document.getElementById('intro');
-    const nameEl  = document.getElementById('introName');
-    const pageEl  = document.getElementById('pageLayer');
-    const canvas  = document.getElementById('introCanvas');
+    const nameEl = document.getElementById('introName');
+    const pageEl = document.getElementById('pageLayer');
+    const canvas = document.getElementById('introCanvas');
     const homeName = document.getElementById('homeName');
 
     const gl = canvas.getContext('webgl', {
@@ -264,6 +264,15 @@
     let H = window.innerHeight;
     let DPR = Math.min(window.devicePixelRatio || 1, 1.5);
 
+    function syncIntroNamePosition() {
+      const rect = homeName.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      nameEl.style.left = `${cx}px`;
+      nameEl.style.top = `${cy}px`;
+      nameEl.style.transform = 'translate(-50%, -50%) scale(0.92)';
+    }
+
     function resize() {
       W = window.innerWidth;
       H = window.innerHeight;
@@ -276,16 +285,6 @@
 
       gl.viewport(0, 0, canvas.width, canvas.height);
       syncIntroNamePosition();
-    }
-
-    function syncIntroNamePosition() {
-      const rect = homeName.getBoundingClientRect();
-      const cx = rect.left + rect.width / 2;
-      const cy = rect.top + rect.height / 2;
-
-      nameEl.style.left = `${cx}px`;
-      nameEl.style.top = `${cy}px`;
-      nameEl.style.transform = 'translate(-50%, -50%) scale(0.92)';
     }
 
     resize();
@@ -311,13 +310,15 @@
       uniform float u_fade;
       uniform float u_aspect;
 
+      #define SAMPLES 56
+
       float saturate(float x) {
         return clamp(x, 0.0, 1.0);
       }
 
-      mat2 rot(float a) {
-        float s = sin(a), c = cos(a);
-        return mat2(c, -s, s, c);
+      float smin(float a, float b, float k) {
+        float h = clamp(0.5 + 0.5 * (b - a) / k, 0.0, 1.0);
+        return mix(b, a, h) - k * h * (1.0 - h);
       }
 
       float hash(vec2 p) {
@@ -340,148 +341,129 @@
              + (d - b) * u.x * u.y;
       }
 
-      vec2 flowWarp(vec2 p, float t) {
-        float n1 = noise(p * 2.2 + vec2(t * 0.10, -t * 0.08));
-        float n2 = noise((p + 4.0) * 3.8 + vec2(-t * 0.12, t * 0.06));
-
-        p.x += (n1 - 0.5) * 0.10;
-        p.y += (n2 - 0.5) * 0.08;
-
-        p += vec2(
-          sin(p.y * 5.5 + t * 1.2) * 0.028,
-          sin(p.x * 4.2 - t * 0.95) * 0.022
+      vec2 catmull(vec2 p0, vec2 p1, vec2 p2, vec2 p3, float t) {
+        float t2 = t * t;
+        float t3 = t2 * t;
+        return 0.5 * (
+          (2.0 * p1) +
+          (-p0 + p2) * t +
+          (2.0*p0 - 5.0*p1 + 4.0*p2 - p3) * t2 +
+          (-p0 + 3.0*p1 - 3.0*p2 + p3) * t3
         );
+      }
+
+      vec2 pathPoint(float t) {
+        vec2 p0 = vec2(-1.08,  1.02); // top left
+        vec2 p1 = vec2(-0.86, -0.22); // middle bottom left
+        vec2 p2 = vec2( 0.34, -0.18); // middle bottom right
+        vec2 p3 = vec2( 0.92,  0.78); // right top
+        vec2 p4 = vec2( 0.00,  0.16); // middle
+
+        if (t < 0.25) {
+          float s = t / 0.25;
+          return catmull(p0, p0, p1, p2, s);
+        } else if (t < 0.56) {
+          float s = (t - 0.25) / 0.31;
+          return catmull(p0, p1, p2, p3, s);
+        } else if (t < 0.80) {
+          float s = (t - 0.56) / 0.24;
+          return catmull(p1, p2, p3, p4, s);
+        } else {
+          float s = (t - 0.80) / 0.20;
+          return catmull(p2, p3, p4, p4, s);
+        }
+      }
+
+      vec2 pathTangent(float t) {
+        float e = 0.01;
+        vec2 a = pathPoint(max(0.0, t - e));
+        vec2 b = pathPoint(min(1.0, t + e));
+        return normalize(b - a + vec2(0.0001));
+      }
+
+      vec2 flowWarp(vec2 p, float t) {
+        float n1 = noise(p * 1.7 + vec2(t * 0.08, -t * 0.05));
+        float n2 = noise(p * 3.4 + vec2(-t * 0.10, t * 0.07));
+        float n3 = noise(p * 6.2 + vec2(t * 0.03, t * 0.04));
+
+        p.x += (n1 - 0.5) * 0.045;
+        p.y += (n2 - 0.5) * 0.035;
+        p += vec2(
+          sin(p.y * 4.5 + t * 1.0) * 0.010,
+          sin(p.x * 3.6 - t * 0.8) * 0.009
+        );
+        p += (n3 - 0.5) * 0.010;
 
         return p;
       }
 
-      vec2 segInfo(vec2 p, vec2 a, vec2 b) {
-        vec2 pa = p - a;
-        vec2 ba = b - a;
-        float h = clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0);
-        vec2 q = a + ba * h;
-        return vec2(length(p - q), h);
-      }
+      float currentField(vec2 p, float head, float lag, float widthMul, float sideOffset, float softness) {
+        float d = 10.0;
+        float effectiveHead = max(0.0, head - lag);
 
-      vec2 pathPoint(float t) {
-        vec2 p0 = vec2(-1.22,  0.98); // top left
-        vec2 p1 = vec2(-0.92, -0.18); // middle bottom left
-        vec2 p2 = vec2( 0.38, -0.22); // middle bottom right
-        vec2 p3 = vec2( 0.92,  0.78); // right top
-        vec2 p4 = vec2( 0.00,  0.18); // middle
+        for (int i = 0; i < SAMPLES; i++) {
+          float t = float(i) / float(SAMPLES - 1);
 
-        if (t < 0.25) {
-          float s = t / 0.25;
-          return mix(p0, p1, s);
-        } else if (t < 0.55) {
-          float s = (t - 0.25) / 0.30;
-          return mix(p1, p2, s);
-        } else if (t < 0.78) {
-          float s = (t - 0.55) / 0.23;
-          return mix(p2, p3, s);
-        } else {
-          float s = (t - 0.78) / 0.22;
-          return mix(p3, p4, s);
+          if (t > effectiveHead) {
+            continue;
+          }
+
+          vec2 q = pathPoint(t);
+          vec2 tanDir = pathTangent(t);
+          vec2 nrm = vec2(-tanDir.y, tanDir.x);
+
+          float localWave =
+              sin(t * 18.0 - u_time * 1.7) * 0.018 +
+              sin(t * 31.0 + u_time * 1.1) * 0.010;
+
+          q += nrm * (sideOffset + localWave);
+          q.x *= u_aspect;
+
+          float trail = 1.0 - saturate((effectiveHead - t) / max(effectiveHead + 0.0001, 0.0001));
+          float width = mix(0.020, 0.085, pow(trail, 0.85)) * widthMul;
+
+          width *= 1.0 + 0.18 * sin(t * 22.0 - u_time * 2.1);
+          width *= 1.0 + 0.10 * sin(t * 37.0 + u_time * 1.6);
+
+          float dist = length(p - q) - width;
+          d = smin(d, dist, softness);
         }
-      }
-
-      float ribbonField(vec2 p, float widthMul, float offsetAmt, float softness, float revealLead) {
-        vec2 p0 = vec2(-1.22,  0.98);
-        vec2 p1 = vec2(-0.92, -0.18);
-        vec2 p2 = vec2( 0.38, -0.22);
-        vec2 p3 = vec2( 0.92,  0.78);
-        vec2 p4 = vec2( 0.00,  0.18);
-
-        p0.x *= u_aspect; p1.x *= u_aspect; p2.x *= u_aspect; p3.x *= u_aspect; p4.x *= u_aspect;
-
-        float minDist = 1e5;
-
-        vec2 a, b, info;
-        float startT, endT, gT;
-        float width;
-        float pulse;
-        vec2 dir, nrm;
-
-        // segment 1
-        a = p0; b = p1;
-        dir = normalize(b - a);
-        nrm = vec2(-dir.y, dir.x);
-        a += nrm * offsetAmt;
-        b += nrm * offsetAmt;
-        info = segInfo(p, a, b);
-        gT = mix(0.0, 0.25, info.y);
-        width = mix(0.26, 0.19, info.y) * widthMul;
-        pulse = 1.0 + 0.12 * sin(gT * 18.0 - u_time * 2.0);
-        if (gT <= u_progress + revealLead) minDist = min(minDist, info.x - width * pulse);
-
-        // segment 2
-        a = p1; b = p2;
-        dir = normalize(b - a);
-        nrm = vec2(-dir.y, dir.x);
-        a += nrm * offsetAmt;
-        b += nrm * offsetAmt;
-        info = segInfo(p, a, b);
-        gT = mix(0.25, 0.55, info.y);
-        width = mix(0.20, 0.24, info.y) * widthMul;
-        pulse = 1.0 + 0.11 * sin(gT * 20.0 - u_time * 2.4);
-        if (gT <= u_progress + revealLead) minDist = min(minDist, info.x - width * pulse);
-
-        // segment 3
-        a = p2; b = p3;
-        dir = normalize(b - a);
-        nrm = vec2(-dir.y, dir.x);
-        a += nrm * offsetAmt;
-        b += nrm * offsetAmt;
-        info = segInfo(p, a, b);
-        gT = mix(0.55, 0.78, info.y);
-        width = mix(0.18, 0.14, info.y) * widthMul;
-        pulse = 1.0 + 0.10 * sin(gT * 22.0 - u_time * 2.1);
-        if (gT <= u_progress + revealLead) minDist = min(minDist, info.x - width * pulse);
-
-        // segment 4
-        a = p3; b = p4;
-        dir = normalize(b - a);
-        nrm = vec2(-dir.y, dir.x);
-        a += nrm * offsetAmt;
-        b += nrm * offsetAmt;
-        info = segInfo(p, a, b);
-        gT = mix(0.78, 1.0, info.y);
-        width = mix(0.14, 0.10, info.y) * widthMul;
-        pulse = 1.0 + 0.08 * sin(gT * 24.0 - u_time * 2.7);
-        if (gT <= u_progress + revealLead) minDist = min(minDist, info.x - width * pulse);
-
-        return minDist - softness;
-      }
-
-      float scene(vec2 p) {
-        vec2 q = p;
-        q.x *= u_aspect;
-        q = flowWarp(q, u_time);
-
-        float mainSheet  = ribbonField(q, 1.00,  0.00, 0.000, 0.06);
-        float upperSheet = ribbonField(q, 0.72,  0.13, 0.010, 0.09);
-        float lowerSheet = ribbonField(q, 0.86, -0.17, 0.012, 0.10);
-        float fineSheet  = ribbonField(q, 0.45,  0.27, 0.020, 0.12);
-
-        float d = min(min(mainSheet, upperSheet), min(lowerSheet, fineSheet));
-
-        vec2 focus = pathPoint(min(u_progress, 1.0));
-        focus.x *= u_aspect;
-
-        float takeover = smoothstep(0.0, 0.45, u_progress);
-        float glowSweep = length(q - focus) - mix(0.45, 0.80, takeover);
-        d = min(d, glowSweep + 0.20);
 
         return d;
       }
 
-      vec3 chromeColor(vec2 p, vec2 n, float edge, float inside) {
-        vec3 viewDir = normalize(vec3(0.0, 0.0, 1.0));
-        vec3 normal  = normalize(vec3(-n.x * 1.0, -n.y * 1.0, 0.72));
+      float scene(vec2 uv) {
+        vec2 p = uv;
+        p.x *= u_aspect;
+        p = flowWarp(p, u_time);
 
-        vec3 lightA = normalize(vec3(-0.75, 0.72, 0.88));
-        vec3 lightB = normalize(vec3( 0.95, 0.10, 0.60));
-        vec3 lightC = normalize(vec3(-0.08,-0.95, 0.30));
+        float head = u_progress;
+
+        float mainFlow   = currentField(p, head, 0.00, 1.00,  0.000, 0.060);
+        float trailA     = currentField(p, head, 0.08, 0.72,  0.030, 0.050);
+        float trailB     = currentField(p, head, 0.15, 0.58, -0.040, 0.045);
+        float whisper    = currentField(p, head, 0.23, 0.38,  0.020, 0.035);
+
+        float d = smin(mainFlow, trailA, 0.070);
+        d = smin(d, trailB, 0.060);
+        d = smin(d, whisper, 0.050);
+
+        vec2 headPos = pathPoint(head);
+        headPos.x *= u_aspect;
+
+        float headBloom = length(p - headPos) - 0.095;
+        d = smin(d, headBloom, 0.11);
+
+        return d;
+      }
+
+      vec3 chromeShade(vec2 uv, vec2 n, float d) {
+        vec3 viewDir = normalize(vec3(0.0, 0.0, 1.0));
+        vec3 normal = normalize(vec3(-n.x * 0.95, -n.y * 0.95, 0.78));
+
+        vec3 lightA = normalize(vec3(-0.72, 0.72, 0.92));
+        vec3 lightB = normalize(vec3( 0.92, 0.08, 0.58));
+        vec3 lightC = normalize(vec3(-0.14,-0.92, 0.26));
 
         float diffA = max(dot(normal, lightA), 0.0);
         float diffB = max(dot(normal, lightB), 0.0);
@@ -489,37 +471,40 @@
 
         vec3 refl = reflect(-viewDir, normal);
 
-        float env =
-            0.50
-          + 0.28 * sin(refl.y * 17.0 + refl.x * 8.0)
-          + 0.16 * sin(refl.y * 34.0 - refl.x * 11.0)
-          + 0.08 * sin(refl.x * 52.0 + refl.y * 14.0);
+        float bands =
+            0.42
+          + 0.22 * sin(refl.y * 14.0 + refl.x * 6.0)
+          + 0.12 * sin(refl.y * 27.0 - refl.x * 10.0)
+          + 0.07 * sin(refl.x * 41.0 + refl.y * 12.0);
 
-        env = saturate(env);
+        bands = saturate(bands);
 
-        float specA = pow(max(dot(normalize(lightA + viewDir), normal), 0.0), 140.0);
-        float specB = pow(max(dot(normalize(lightB + viewDir), normal), 0.0), 90.0);
-        float specC = pow(max(dot(normalize(lightC + viewDir), normal), 0.0), 40.0);
+        float specA = pow(max(dot(normalize(lightA + viewDir), normal), 0.0), 120.0);
+        float specB = pow(max(dot(normalize(lightB + viewDir), normal), 0.0), 84.0);
+        float specC = pow(max(dot(normalize(lightC + viewDir), normal), 0.0), 34.0);
 
-        float fresnel = pow(1.0 - max(dot(normal, viewDir), 0.0), 3.3);
+        float fresnel = pow(1.0 - max(dot(normal, viewDir), 0.0), 3.0);
 
-        vec3 shadow = vec3(0.015, 0.018, 0.022);
-        vec3 mid    = vec3(0.34, 0.36, 0.39);
-        vec3 bright = vec3(0.95, 0.96, 0.98);
+        vec3 shadow = vec3(0.018, 0.020, 0.024);
+        vec3 mid    = vec3(0.40, 0.43, 0.47);
+        vec3 bright = vec3(0.92, 0.94, 0.97);
 
-        vec3 col = mix(shadow, mid, env);
-        col = mix(col, bright, diffA * 0.90 + diffB * 0.42);
-        col += specA * vec3(1.0);
-        col += specB * vec3(0.98, 0.99, 1.0) * 0.95;
-        col += specC * vec3(0.75, 0.80, 0.86) * 0.40;
-        col += fresnel * vec3(0.26, 0.28, 0.31) * 0.95;
-        col += edge * vec3(0.22, 0.23, 0.25);
+        vec3 col = mix(shadow, mid, bands);
+        col = mix(col, bright, diffA * 0.72 + diffB * 0.34 + diffC * 0.10);
 
-        float seam = 0.5 + 0.5 * sin((p.x + p.y) * 18.0 + u_time * 1.8);
-        col *= mix(0.86, 1.14, seam);
+        col += specA * vec3(1.0) * 0.72;
+        col += specB * vec3(0.96, 0.98, 1.0) * 0.58;
+        col += specC * vec3(0.74, 0.80, 0.88) * 0.20;
+        col += fresnel * vec3(0.18, 0.20, 0.24) * 0.55;
 
-        float streaks = 0.5 + 0.5 * sin((p.x * 28.0 - p.y * 14.0) - u_time * 2.8);
-        col += streaks * 0.10 * inside;
+        float liquidStreak =
+            0.5 + 0.5 * sin((uv.x * 18.0 - uv.y * 9.0) - u_time * 2.0) *
+            (0.5 + 0.5 * sin((uv.x * 35.0 + uv.y * 7.0) + u_time * 1.3));
+
+        col *= mix(0.94, 1.08, liquidStreak);
+
+        float edgeGlow = 1.0 - smoothstep(-0.035, 0.015, d);
+        col += edgeGlow * vec3(0.10, 0.105, 0.115);
 
         return col;
       }
@@ -530,27 +515,25 @@
 
         float d = scene(uv);
 
-        float aa = 0.012;
-        float inside = smoothstep(aa, -aa, d);
-
-        if (inside < 0.001) {
+        float alpha = 1.0 - smoothstep(0.020, 0.090, d);
+        if (alpha < 0.001) {
           gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
           return;
         }
 
-        float dx = scene(uv + vec2(0.003, 0.0)) - d;
-        float dy = scene(uv + vec2(0.0, 0.003)) - d;
+        float dx = scene(uv + vec2(0.0025, 0.0)) - d;
+        float dy = scene(uv + vec2(0.0, 0.0025)) - d;
         vec2 n = normalize(vec2(dx, dy) + vec2(0.0001));
 
-        float edge = 1.0 - smoothstep(-0.08, 0.02, d);
-        vec3 col = chromeColor(uv, n, edge, inside);
+        vec3 col = chromeShade(uv, n, d);
 
-        float sweepHighlight = smoothstep(0.15, -0.25, d);
-        col += sweepHighlight * vec3(0.18, 0.19, 0.20);
+        float core = 1.0 - smoothstep(-0.045, 0.010, d);
+        col += core * vec3(0.06, 0.065, 0.07);
 
         col *= (1.0 - u_fade);
+        alpha *= (1.0 - u_fade);
 
-        gl_FragColor = vec4(col, 1.0);
+        gl_FragColor = vec4(col, alpha + (1.0 - alpha));
       }
     `;
 
@@ -584,11 +567,11 @@
     gl.enableVertexAttribArray(aPos);
     gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
 
-    const uRes      = gl.getUniformLocation(program, 'u_res');
-    const uTime     = gl.getUniformLocation(program, 'u_time');
+    const uRes = gl.getUniformLocation(program, 'u_res');
+    const uTime = gl.getUniformLocation(program, 'u_time');
     const uProgress = gl.getUniformLocation(program, 'u_progress');
-    const uFade     = gl.getUniformLocation(program, 'u_fade');
-    const uAspect   = gl.getUniformLocation(program, 'u_aspect');
+    const uFade = gl.getUniformLocation(program, 'u_fade');
+    const uAspect = gl.getUniformLocation(program, 'u_aspect');
 
     let animId = null;
     let startTime = null;
@@ -597,21 +580,21 @@
       return Math.max(a, Math.min(b, v));
     }
 
-    function easeOutExpo(t) {
-      return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
-    }
-
     function easeInOutCubic(t) {
       return t < 0.5
         ? 4 * t * t * t
         : 1 - Math.pow(-2 * t + 2, 3) / 2;
     }
 
-    const SWEEP_END   = 3000;
-    const NAME_START  = 2550;
-    const PAGE_START  = 3000;
-    const FADE_START  = 3900;
-    const FADE_END    = 5100;
+    function easeOutExpo(t) {
+      return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
+    }
+
+    const FLOW_END  = 3200;
+    const NAME_AT   = 2650;
+    const PAGE_AT   = 3000;
+    const FADE_AT   = 3900;
+    const END_AT    = 5200;
 
     function render(ts) {
       if (!startTime) startTime = ts;
@@ -621,8 +604,8 @@
       gl.clearColor(0, 0, 0, 1);
       gl.clear(gl.COLOR_BUFFER_BIT);
 
-      const progress = easeInOutCubic(clamp(elapsed / SWEEP_END, 0, 1));
-      const fade = easeOutExpo(clamp((elapsed - FADE_START) / (FADE_END - FADE_START), 0, 1));
+      const progress = easeInOutCubic(clamp(elapsed / FLOW_END, 0, 1));
+      const fade = easeOutExpo(clamp((elapsed - FADE_AT) / (END_AT - FADE_AT), 0, 1));
 
       gl.uniform2f(uRes, canvas.width, canvas.height);
       gl.uniform1f(uTime, sec);
@@ -632,22 +615,22 @@
 
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 
-      if (elapsed > NAME_START) {
+      if (elapsed > NAME_AT) {
         nameEl.classList.add('show');
         nameEl.style.transform = 'translate(-50%, -50%) scale(1)';
       }
 
-      if (elapsed > PAGE_START) {
-        const pageProgress = clamp((elapsed - PAGE_START) / (FADE_END - PAGE_START), 0, 1);
+      if (elapsed > PAGE_AT) {
+        const pageProgress = clamp((elapsed - PAGE_AT) / (END_AT - PAGE_AT), 0, 1);
         pageEl.style.opacity = String(easeOutExpo(pageProgress));
       }
 
-      if (elapsed > FADE_START) {
-        const bgFade = clamp((elapsed - FADE_START) / (FADE_END - FADE_START), 0, 1);
+      if (elapsed > FADE_AT) {
+        const bgFade = clamp((elapsed - FADE_AT) / (END_AT - FADE_AT), 0, 1);
         introEl.style.background = `rgba(0,0,0,${(1 - easeOutExpo(bgFade)).toFixed(3)})`;
       }
 
-      if (elapsed >= FADE_END) {
+      if (elapsed >= END_AT) {
         introEl.style.display = 'none';
         cancelAnimationFrame(animId);
         return;
@@ -672,22 +655,6 @@
     startIntro();
     homeName.addEventListener('click', startIntro);
   })();
-    
-  // ── HAMBURGER ──
-  const hamburger  = document.getElementById('hamburger');
-  const mobileMenu = document.getElementById('mobileMenu');
-  hamburger.addEventListener('click', () => {
-    const isOpen = mobileMenu.classList.toggle('open');
-    hamburger.classList.toggle('open', isOpen);
-    document.body.style.overflow = isOpen ? 'hidden' : '';
-  });
-  mobileMenu.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', () => {
-      mobileMenu.classList.remove('open');
-      hamburger.classList.remove('open');
-      document.body.style.overflow = '';
-    });
-  });
 
   // ── SCROLL REVEAL ──
   const revealEls = document.querySelectorAll('.reveal, .reveal-stagger');
