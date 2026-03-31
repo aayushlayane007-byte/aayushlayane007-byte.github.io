@@ -24,44 +24,122 @@
       inset: 0;
       z-index: 9999;
       background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       pointer-events: all;
+      overflow: hidden;
     }
 
-    #introCanvas {
+    #intro::before {
+      content: "";
       position: absolute;
       inset: 0;
-      width: 100%;
-      height: 100%;
-      display: block;
+      background:
+        radial-gradient(circle at center, rgba(255,255,255,0.035) 0%, rgba(255,255,255,0.01) 18%, rgba(0,0,0,0) 52%);
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .intro-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
+      transform: translateY(-6px);
     }
 
     #introName {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%) scale(0.92);
       font-family: Inter, sans-serif;
-      font-size: 36px;
-      font-weight: 700;
+      font-size: 40px;
+      font-style: italic;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1;
       white-space: nowrap;
-      letter-spacing: -0.01em;
       opacity: 0;
-      pointer-events: none;
-      background: linear-gradient(
-        160deg,
-        #ffffff 0%, #e4f2fa 12%, #b0ccd8 26%,
-        #607880 42%, #0e1618 54%, #486070 66%,
-        #a8c8d6 78%, #eef8ff 90%, #c0d8e4 100%
-      );
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      transition: opacity 1.2s ease, transform 1.2s var(--ease-out-expo);
+      transform: translateY(8px);
+      color: rgba(255,255,255,0.96);
+      text-shadow:
+        0 0 10px rgba(255,255,255,0.10),
+        0 0 24px rgba(255,255,255,0.05);
+      transition:
+        opacity 0.45s ease,
+        transform 0.45s var(--ease-out-expo);
     }
 
     #introName.show {
       opacity: 1;
-      transform: translate(-50%, -50%) scale(1);
+      transform: translateY(0);
+    }
+
+    .intro-lights {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 34px;
+    }
+
+    .start-light {
+      width: 92px;
+      height: 92px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 35% 32%, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.08) 18%, rgba(255,255,255,0.02) 32%, rgba(0,0,0,0) 42%),
+        radial-gradient(circle at center, rgba(255,70,70,0.98) 0%, rgba(200,0,0,0.94) 42%, rgba(80,0,0,0.95) 72%, rgba(10,10,10,1) 100%);
+      box-shadow:
+        inset 0 0 0 2px rgba(255,255,255,0.08),
+        inset 0 -10px 18px rgba(0,0,0,0.45),
+        0 0 0 1px rgba(255,255,255,0.06),
+        0 0 26px rgba(255,0,0,0.12),
+        0 0 50px rgba(255,0,0,0.08);
+      opacity: 0.18;
+      transform: scale(0.96);
+      transition:
+        opacity 0.22s ease,
+        transform 0.22s ease,
+        box-shadow 0.22s ease,
+        background 0.22s ease;
+    }
+
+    .start-light.on {
+      opacity: 1;
+      transform: scale(1);
+      box-shadow:
+        inset 0 0 0 2px rgba(255,255,255,0.10),
+        inset 0 -10px 18px rgba(0,0,0,0.40),
+        0 0 0 1px rgba(255,255,255,0.06),
+        0 0 28px rgba(255,0,0,0.34),
+        0 0 56px rgba(255,0,0,0.24),
+        0 0 96px rgba(255,0,0,0.16);
+    }
+
+    .start-light.go {
+      opacity: 1;
+      transform: scale(1.02);
+      background:
+        radial-gradient(circle at 35% 32%, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0.10) 18%, rgba(255,255,255,0.03) 32%, rgba(0,0,0,0) 42%),
+        radial-gradient(circle at center, rgba(100,255,140,1) 0%, rgba(0,210,70,0.96) 44%, rgba(0,90,28,0.98) 74%, rgba(10,10,10,1) 100%);
+      box-shadow:
+        inset 0 0 0 2px rgba(255,255,255,0.10),
+        inset 0 -10px 18px rgba(0,0,0,0.35),
+        0 0 0 1px rgba(255,255,255,0.06),
+        0 0 34px rgba(0,255,110,0.44),
+        0 0 70px rgba(0,255,110,0.28),
+        0 0 110px rgba(0,255,110,0.18);
+    }
+
+    .intro-flash {
+      animation: introFlash 0.32s ease;
+    }
+
+    @keyframes introFlash {
+      0%   { background: #000; }
+      45%  { background: #041107; }
+      100% { background: #000; }
     }
 
     /* ── HEADER ── */
@@ -152,14 +230,37 @@
       .info-grid { gap: 48px; flex-direction: column; align-items: center; }
       .home-name { font-size: 28px; }
       .home-tagline { font-size: 24px; }
+
+      #introName {
+        font-size: 24px;
+        text-align: center;
+        white-space: normal;
+        max-width: 85vw;
+      }
+
+      .intro-lights {
+        gap: 18px;
+      }
+
+      .start-light {
+        width: 60px;
+        height: 60px;
+      }
     }
   </style>
 </head>
 <body class="home">
 
   <div id="intro">
-    <canvas id="introCanvas"></canvas>
-    <div id="introName">Aayush Layane</div>
+    <div class="intro-content">
+      <div id="introName">Lights out and away we go!</div>
+
+      <div class="intro-lights" id="introLights" aria-hidden="true">
+        <span class="start-light"></span>
+        <span class="start-light"></span>
+        <span class="start-light"></span>
+      </div>
+    </div>
   </div>
 
   <div id="pageLayer">
@@ -236,425 +337,123 @@
   track.innerHTML = mhtml;
 
   // ══════════════════════════════════════════════════════════
-  //  WEBGL MERCURY METABALL FLUID INTRO
-  // ══════════════════════════════════════════════════════════
-  // ══════════════════════════════════════════════════════════
-  //  LIQUID METAL CURRENT INTRO
+  //  F1 LIGHTS INTRO
   // ══════════════════════════════════════════════════════════
   (function () {
     const introEl = document.getElementById('intro');
     const nameEl = document.getElementById('introName');
     const pageEl = document.getElementById('pageLayer');
-    const canvas = document.getElementById('introCanvas');
     const homeName = document.getElementById('homeName');
+    const lights = Array.from(document.querySelectorAll('.start-light'));
 
-    const gl = canvas.getContext('webgl', {
-      antialias: true,
-      alpha: false,
-      premultipliedAlpha: false
-    });
+    let timers = [];
 
-    if (!gl) {
-      introEl.style.display = 'none';
-      pageEl.style.opacity = '1';
-      return;
+    function clearIntroTimers() {
+      timers.forEach(timer => clearTimeout(timer));
+      timers = [];
     }
 
-    let W = window.innerWidth;
-    let H = window.innerHeight;
-    let DPR = Math.min(window.devicePixelRatio || 1, 1.5);
+    function resetIntro() {
+      clearIntroTimers();
+      introEl.style.display = 'flex';
+      introEl.style.opacity = '1';
+      introEl.classList.remove('intro-flash');
 
-    function syncIntroNamePosition() {
-      const rect = homeName.getBoundingClientRect();
-      const cx = rect.left + rect.width / 2;
-      const cy = rect.top + rect.height / 2;
-      nameEl.style.left = `${cx}px`;
-      nameEl.style.top = `${cy}px`;
-      nameEl.style.transform = 'translate(-50%, -50%) scale(0.92)';
+      pageEl.style.opacity = '0';
+
+      nameEl.classList.remove('show');
+
+      lights.forEach(light => {
+        light.classList.remove('on', 'go');
+      });
     }
 
-    function resize() {
-      W = window.innerWidth;
-      H = window.innerHeight;
-      DPR = Math.min(window.devicePixelRatio || 1, 1.5);
+    function fadePageIn(duration = 1200) {
+      const start = performance.now();
 
-      canvas.width = Math.floor(W * DPR);
-      canvas.height = Math.floor(H * DPR);
-      canvas.style.width = W + 'px';
-      canvas.style.height = H + 'px';
+      function step(now) {
+        const progress = Math.min((now - start) / duration, 1);
+        const eased = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+        pageEl.style.opacity = String(eased);
 
-      gl.viewport(0, 0, canvas.width, canvas.height);
-      syncIntroNamePosition();
+        if (progress < 1) {
+          requestAnimationFrame(step);
+        }
+      }
+
+      requestAnimationFrame(step);
     }
 
-    resize();
-    window.addEventListener('resize', resize);
+    function fadeIntroOut(duration = 850) {
+      const start = performance.now();
 
-    const VS = `
-      attribute vec2 a_pos;
-      varying vec2 v_uv;
+      function step(now) {
+        const progress = Math.min((now - start) / duration, 1);
+        introEl.style.opacity = String(1 - progress);
 
-      void main() {
-        v_uv = a_pos * 0.5 + 0.5;
-        gl_Position = vec4(a_pos, 0.0, 1.0);
-      }
-    `;
-
-    const FS = `
-      precision highp float;
-      varying vec2 v_uv;
-
-      uniform vec2  u_res;
-      uniform float u_time;
-      uniform float u_progress;
-      uniform float u_fade;
-      uniform float u_aspect;
-
-      #define SAMPLES 56
-
-      float saturate(float x) {
-        return clamp(x, 0.0, 1.0);
-      }
-
-      float smin(float a, float b, float k) {
-        float h = clamp(0.5 + 0.5 * (b - a) / k, 0.0, 1.0);
-        return mix(b, a, h) - k * h * (1.0 - h);
-      }
-
-      float hash(vec2 p) {
-        return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
-      }
-
-      float noise(vec2 p) {
-        vec2 i = floor(p);
-        vec2 f = fract(p);
-
-        float a = hash(i);
-        float b = hash(i + vec2(1.0, 0.0));
-        float c = hash(i + vec2(0.0, 1.0));
-        float d = hash(i + vec2(1.0, 1.0));
-
-        vec2 u = f * f * (3.0 - 2.0 * f);
-
-        return mix(a, b, u.x)
-             + (c - a) * u.y * (1.0 - u.x)
-             + (d - b) * u.x * u.y;
-      }
-
-      vec2 catmull(vec2 p0, vec2 p1, vec2 p2, vec2 p3, float t) {
-        float t2 = t * t;
-        float t3 = t2 * t;
-        return 0.5 * (
-          (2.0 * p1) +
-          (-p0 + p2) * t +
-          (2.0*p0 - 5.0*p1 + 4.0*p2 - p3) * t2 +
-          (-p0 + 3.0*p1 - 3.0*p2 + p3) * t3
-        );
-      }
-
-      vec2 pathPoint(float t) {
-        vec2 p0 = vec2(-1.08,  1.02); // top left
-        vec2 p1 = vec2(-0.86, -0.22); // middle bottom left
-        vec2 p2 = vec2( 0.34, -0.18); // middle bottom right
-        vec2 p3 = vec2( 0.92,  0.78); // right top
-        vec2 p4 = vec2( 0.00,  0.16); // middle
-
-        if (t < 0.25) {
-          float s = t / 0.25;
-          return catmull(p0, p0, p1, p2, s);
-        } else if (t < 0.56) {
-          float s = (t - 0.25) / 0.31;
-          return catmull(p0, p1, p2, p3, s);
-        } else if (t < 0.80) {
-          float s = (t - 0.56) / 0.24;
-          return catmull(p1, p2, p3, p4, s);
+        if (progress < 1) {
+          requestAnimationFrame(step);
         } else {
-          float s = (t - 0.80) / 0.20;
-          return catmull(p2, p3, p4, p4, s);
+          introEl.style.display = 'none';
+          introEl.style.opacity = '1';
         }
       }
 
-      vec2 pathTangent(float t) {
-        float e = 0.01;
-        vec2 a = pathPoint(max(0.0, t - e));
-        vec2 b = pathPoint(min(1.0, t + e));
-        return normalize(b - a + vec2(0.0001));
-      }
-
-      vec2 flowWarp(vec2 p, float t) {
-        float n1 = noise(p * 1.7 + vec2(t * 0.08, -t * 0.05));
-        float n2 = noise(p * 3.4 + vec2(-t * 0.10, t * 0.07));
-        float n3 = noise(p * 6.2 + vec2(t * 0.03, t * 0.04));
-
-        p.x += (n1 - 0.5) * 0.045;
-        p.y += (n2 - 0.5) * 0.035;
-        p += vec2(
-          sin(p.y * 4.5 + t * 1.0) * 0.010,
-          sin(p.x * 3.6 - t * 0.8) * 0.009
-        );
-        p += (n3 - 0.5) * 0.010;
-
-        return p;
-      }
-
-      float currentField(vec2 p, float head, float lag, float widthMul, float sideOffset, float softness) {
-        float d = 10.0;
-        float effectiveHead = max(0.0, head - lag);
-
-        for (int i = 0; i < SAMPLES; i++) {
-          float t = float(i) / float(SAMPLES - 1);
-
-          if (t > effectiveHead) {
-            continue;
-          }
-
-          vec2 q = pathPoint(t);
-          vec2 tanDir = pathTangent(t);
-          vec2 nrm = vec2(-tanDir.y, tanDir.x);
-
-          float localWave =
-              sin(t * 18.0 - u_time * 1.7) * 0.018 +
-              sin(t * 31.0 + u_time * 1.1) * 0.010;
-
-          q += nrm * (sideOffset + localWave);
-          q.x *= u_aspect;
-
-          float trail = 1.0 - saturate((effectiveHead - t) / max(effectiveHead + 0.0001, 0.0001));
-          float width = mix(0.020, 0.085, pow(trail, 0.85)) * widthMul;
-
-          width *= 1.0 + 0.18 * sin(t * 22.0 - u_time * 2.1);
-          width *= 1.0 + 0.10 * sin(t * 37.0 + u_time * 1.6);
-
-          float dist = length(p - q) - width;
-          d = smin(d, dist, softness);
-        }
-
-        return d;
-      }
-
-      float scene(vec2 uv) {
-        vec2 p = uv;
-        p.x *= u_aspect;
-        p = flowWarp(p, u_time);
-
-        float head = u_progress;
-
-        float mainFlow   = currentField(p, head, 0.00, 1.00,  0.000, 0.060);
-        float trailA     = currentField(p, head, 0.08, 0.72,  0.030, 0.050);
-        float trailB     = currentField(p, head, 0.15, 0.58, -0.040, 0.045);
-        float whisper    = currentField(p, head, 0.23, 0.38,  0.020, 0.035);
-
-        float d = smin(mainFlow, trailA, 0.070);
-        d = smin(d, trailB, 0.060);
-        d = smin(d, whisper, 0.050);
-
-        vec2 headPos = pathPoint(head);
-        headPos.x *= u_aspect;
-
-        float headBloom = length(p - headPos) - 0.095;
-        d = smin(d, headBloom, 0.11);
-
-        return d;
-      }
-
-      vec3 chromeShade(vec2 uv, vec2 n, float d) {
-        vec3 viewDir = normalize(vec3(0.0, 0.0, 1.0));
-        vec3 normal = normalize(vec3(-n.x * 0.95, -n.y * 0.95, 0.78));
-
-        vec3 lightA = normalize(vec3(-0.72, 0.72, 0.92));
-        vec3 lightB = normalize(vec3( 0.92, 0.08, 0.58));
-        vec3 lightC = normalize(vec3(-0.14,-0.92, 0.26));
-
-        float diffA = max(dot(normal, lightA), 0.0);
-        float diffB = max(dot(normal, lightB), 0.0);
-        float diffC = max(dot(normal, lightC), 0.0);
-
-        vec3 refl = reflect(-viewDir, normal);
-
-        float bands =
-            0.42
-          + 0.22 * sin(refl.y * 14.0 + refl.x * 6.0)
-          + 0.12 * sin(refl.y * 27.0 - refl.x * 10.0)
-          + 0.07 * sin(refl.x * 41.0 + refl.y * 12.0);
-
-        bands = saturate(bands);
-
-        float specA = pow(max(dot(normalize(lightA + viewDir), normal), 0.0), 120.0);
-        float specB = pow(max(dot(normalize(lightB + viewDir), normal), 0.0), 84.0);
-        float specC = pow(max(dot(normalize(lightC + viewDir), normal), 0.0), 34.0);
-
-        float fresnel = pow(1.0 - max(dot(normal, viewDir), 0.0), 3.0);
-
-        vec3 shadow = vec3(0.018, 0.020, 0.024);
-        vec3 mid    = vec3(0.40, 0.43, 0.47);
-        vec3 bright = vec3(0.92, 0.94, 0.97);
-
-        vec3 col = mix(shadow, mid, bands);
-        col = mix(col, bright, diffA * 0.72 + diffB * 0.34 + diffC * 0.10);
-
-        col += specA * vec3(1.0) * 0.72;
-        col += specB * vec3(0.96, 0.98, 1.0) * 0.58;
-        col += specC * vec3(0.74, 0.80, 0.88) * 0.20;
-        col += fresnel * vec3(0.18, 0.20, 0.24) * 0.55;
-
-        float liquidStreak =
-            0.5 + 0.5 * sin((uv.x * 18.0 - uv.y * 9.0) - u_time * 2.0) *
-            (0.5 + 0.5 * sin((uv.x * 35.0 + uv.y * 7.0) + u_time * 1.3));
-
-        col *= mix(0.94, 1.08, liquidStreak);
-
-        float edgeGlow = 1.0 - smoothstep(-0.035, 0.015, d);
-        col += edgeGlow * vec3(0.10, 0.105, 0.115);
-
-        return col;
-      }
-
-      void main() {
-        vec2 uv = v_uv * 2.0 - 1.0;
-        uv.y *= u_res.y / u_res.x;
-
-        float d = scene(uv);
-
-        float alpha = 1.0 - smoothstep(0.020, 0.090, d);
-        if (alpha < 0.001) {
-          gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
-          return;
-        }
-
-        float dx = scene(uv + vec2(0.0025, 0.0)) - d;
-        float dy = scene(uv + vec2(0.0, 0.0025)) - d;
-        vec2 n = normalize(vec2(dx, dy) + vec2(0.0001));
-
-        vec3 col = chromeShade(uv, n, d);
-
-        float core = 1.0 - smoothstep(-0.045, 0.010, d);
-        col += core * vec3(0.06, 0.065, 0.07);
-
-        col *= (1.0 - u_fade);
-        alpha *= (1.0 - u_fade);
-
-        gl_FragColor = vec4(col, alpha + (1.0 - alpha));
-      }
-    `;
-
-    function compile(type, src) {
-      const shader = gl.createShader(type);
-      gl.shaderSource(shader, src);
-      gl.compileShader(shader);
-
-      if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-        console.error(gl.getShaderInfoLog(shader));
-      }
-
-      return shader;
-    }
-
-    const program = gl.createProgram();
-    gl.attachShader(program, compile(gl.VERTEX_SHADER, VS));
-    gl.attachShader(program, compile(gl.FRAGMENT_SHADER, FS));
-    gl.linkProgram(program);
-    gl.useProgram(program);
-
-    const quad = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, quad);
-    gl.bufferData(
-      gl.ARRAY_BUFFER,
-      new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]),
-      gl.STATIC_DRAW
-    );
-
-    const aPos = gl.getAttribLocation(program, 'a_pos');
-    gl.enableVertexAttribArray(aPos);
-    gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
-
-    const uRes = gl.getUniformLocation(program, 'u_res');
-    const uTime = gl.getUniformLocation(program, 'u_time');
-    const uProgress = gl.getUniformLocation(program, 'u_progress');
-    const uFade = gl.getUniformLocation(program, 'u_fade');
-    const uAspect = gl.getUniformLocation(program, 'u_aspect');
-
-    let animId = null;
-    let startTime = null;
-
-    function clamp(v, a, b) {
-      return Math.max(a, Math.min(b, v));
-    }
-
-    function easeInOutCubic(t) {
-      return t < 0.5
-        ? 4 * t * t * t
-        : 1 - Math.pow(-2 * t + 2, 3) / 2;
-    }
-
-    function easeOutExpo(t) {
-      return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
-    }
-
-    const FLOW_END  = 3200;
-    const NAME_AT   = 2650;
-    const PAGE_AT   = 3000;
-    const FADE_AT   = 3900;
-    const END_AT    = 5200;
-
-    function render(ts) {
-      if (!startTime) startTime = ts;
-      const elapsed = ts - startTime;
-      const sec = elapsed / 1000;
-
-      gl.clearColor(0, 0, 0, 1);
-      gl.clear(gl.COLOR_BUFFER_BIT);
-
-      const progress = easeInOutCubic(clamp(elapsed / FLOW_END, 0, 1));
-      const fade = easeOutExpo(clamp((elapsed - FADE_AT) / (END_AT - FADE_AT), 0, 1));
-
-      gl.uniform2f(uRes, canvas.width, canvas.height);
-      gl.uniform1f(uTime, sec);
-      gl.uniform1f(uProgress, progress);
-      gl.uniform1f(uFade, fade);
-      gl.uniform1f(uAspect, canvas.width / canvas.height);
-
-      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-
-      if (elapsed > NAME_AT) {
-        nameEl.classList.add('show');
-        nameEl.style.transform = 'translate(-50%, -50%) scale(1)';
-      }
-
-      if (elapsed > PAGE_AT) {
-        const pageProgress = clamp((elapsed - PAGE_AT) / (END_AT - PAGE_AT), 0, 1);
-        pageEl.style.opacity = String(easeOutExpo(pageProgress));
-      }
-
-      if (elapsed > FADE_AT) {
-        const bgFade = clamp((elapsed - FADE_AT) / (END_AT - FADE_AT), 0, 1);
-        introEl.style.background = `rgba(0,0,0,${(1 - easeOutExpo(bgFade)).toFixed(3)})`;
-      }
-
-      if (elapsed >= END_AT) {
-        introEl.style.display = 'none';
-        cancelAnimationFrame(animId);
-        return;
-      }
-
-      animId = requestAnimationFrame(render);
+      requestAnimationFrame(step);
     }
 
     function startIntro() {
-      syncIntroNamePosition();
-      startTime = null;
-      nameEl.classList.remove('show');
-      nameEl.style.transform = 'translate(-50%, -50%) scale(0.92)';
-      introEl.style.display = 'block';
-      introEl.style.background = '#000';
-      pageEl.style.opacity = '0';
+      resetIntro();
 
-      cancelAnimationFrame(animId);
-      animId = requestAnimationFrame(render);
+      timers.push(setTimeout(() => {
+        lights[0].classList.add('on');
+      }, 180));
+
+      timers.push(setTimeout(() => {
+        lights[1].classList.add('on');
+      }, 520));
+
+      timers.push(setTimeout(() => {
+        lights[2].classList.add('on');
+      }, 860));
+
+      timers.push(setTimeout(() => {
+        nameEl.classList.add('show');
+      }, 1150));
+
+      timers.push(setTimeout(() => {
+        introEl.classList.add('intro-flash');
+        lights.forEach(light => {
+          light.classList.remove('on');
+          light.classList.add('go');
+        });
+      }, 2950));
+
+      timers.push(setTimeout(() => {
+        fadePageIn(1200);
+        fadeIntroOut(900);
+      }, 3250));
     }
 
     startIntro();
     homeName.addEventListener('click', startIntro);
   })();
+
+  // ── HAMBURGER ──
+  const hamburger  = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobileMenu');
+  hamburger.addEventListener('click', () => {
+    const isOpen = mobileMenu.classList.toggle('open');
+    hamburger.classList.toggle('open', isOpen);
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  });
+  mobileMenu.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      mobileMenu.classList.remove('open');
+      hamburger.classList.remove('open');
+      document.body.style.overflow = '';
+    });
+  });
 
   // ── SCROLL REVEAL ──
   const revealEls = document.querySelectorAll('.reveal, .reveal-stagger');
