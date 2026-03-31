@@ -11,26 +11,20 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root { --ease-out-expo: cubic-bezier(0.16,1,0.3,1); }
 
-    /* ─────────────────────────
-       PAGE LAYER (fades in under intro)
-    ───────────────────────── */
     #pageLayer {
       opacity: 0;
-      transition: opacity 0s;
       display: flex;
       flex-direction: column;
       min-height: 100vh;
     }
 
-    /* ─────────────────────────
-       INTRO OVERLAY
-    ───────────────────────── */
+    /* ── INTRO ── */
     #intro {
       position: fixed;
       inset: 0;
       z-index: 9999;
-      pointer-events: all;
       background: #000;
+      pointer-events: all;
     }
 
     #introCanvas {
@@ -41,12 +35,11 @@
       display: block;
     }
 
-    /* Name lives inside intro, positioned at same place as real name */
     #introName {
       position: absolute;
       left: 50%;
       top: 50%;
-      transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%) scale(0.92);
       font-family: Inter, sans-serif;
       font-size: 36px;
       font-weight: 700;
@@ -54,28 +47,24 @@
       letter-spacing: -0.01em;
       opacity: 0;
       pointer-events: none;
-      /* chrome text matching the fluid */
       background: linear-gradient(
         160deg,
-        #ffffff   0%,
-        #e4f2fa  12%,
-        #b0ccd8  26%,
-        #607880  42%,
-        #0e1618  54%,
-        #486070  66%,
-        #a8c8d6  78%,
-        #eef8ff  90%,
-        #c0d8e4 100%
+        #ffffff 0%, #e4f2fa 12%, #b0ccd8 26%,
+        #607880 42%, #0e1618 54%, #486070 66%,
+        #a8c8d6 78%, #eef8ff 90%, #c0d8e4 100%
       );
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
-      /* match real home-name size */
+      transition: opacity 1.2s ease, transform 1.2s var(--ease-out-expo);
     }
 
-    /* ─────────────────────────
-       HEADER
-    ───────────────────────── */
+    #introName.show {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    /* ── HEADER ── */
     header {
       position: fixed; top: 0; left: 0; right: 0;
       display: flex; justify-content: space-between; align-items: center;
@@ -98,7 +87,6 @@
     nav a { color: white; text-decoration: none; font-family: Inter, sans-serif; font-size: 24px; transition: opacity 0.2s ease; }
     nav a:hover { opacity: 0.6; }
 
-    /* ── HAMBURGER ── */
     .hamburger { display: none; flex-direction: column; justify-content: center; gap: 6px; width: 40px; height: 40px; cursor: pointer; background: none; border: none; padding: 0; z-index: 1100; }
     .hamburger span { display: block; height: 2px; background: white; border-radius: 2px; transition: transform 0.35s var(--ease-out-expo), opacity 0.25s ease; }
     .hamburger span:nth-child(1) { width: 28px; }
@@ -108,7 +96,6 @@
     .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
     .hamburger.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); width: 28px; }
 
-    /* ── MOBILE MENU ── */
     .mobile-menu { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.97); z-index: 1050; flex-direction: column; align-items: center; justify-content: center; gap: 36px; opacity: 0; pointer-events: none; transition: opacity 0.35s ease; }
     .mobile-menu.open { opacity: 1; pointer-events: all; }
     .mobile-menu a { font-family: Inter, sans-serif; font-size: 32px; font-weight: 700; color: white; text-decoration: none; opacity: 0; transform: translateY(18px); transition: opacity 0.4s ease, transform 0.4s var(--ease-out-expo); }
@@ -121,7 +108,6 @@
     .mobile-menu.open a:nth-child(6) { transition-delay: 0.30s; }
     .mobile-menu a:hover { opacity: 0.6 !important; }
 
-    /* ── MAIN ── */
     main { flex: 1; padding: 180px 40px 60px; box-sizing: border-box; }
     .home-container { display: flex; flex-direction: column; align-items: center; text-align: center; }
     .home-name { font-size: 36px; font-weight: 700; margin-bottom: 30px; color: white; cursor: pointer; transition: opacity 0.2s ease; }
@@ -129,14 +115,12 @@
     .home-photo { width: 520px; max-width: 100%; height: auto; border-radius: 14px; margin-bottom: 0; }
     .home-tagline { font-size: 36px; font-weight: 700; margin-bottom: 0; color: white; }
 
-    /* ── MARQUEE ── */
     .marquee-wrap { width: 100vw; margin-left: calc(-50vw + 50%); overflow: hidden; border-top: 1px solid rgba(255,255,255,0.08); border-bottom: 1px solid rgba(255,255,255,0.08); padding: 14px 0; margin-top: 48px; margin-bottom: 48px; }
     .marquee-track { display: flex; animation: marqueeScroll 20s linear infinite; white-space: nowrap; }
     .marquee-track span { font-family: Inter, sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.3); padding: 0 28px; }
     .marquee-track span.sep { color: rgba(255,255,255,0.12); padding: 0; letter-spacing: 0; }
     @keyframes marqueeScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
-    /* ── INFO GRID ── */
     .info-grid { display: flex; justify-content: center; gap: 140px; margin-top: 20px; }
     .contact-block, .social-block { text-align: center; }
     .contact-block h3, .social-block h3 { font-size: 24px; margin-bottom: 18px; }
@@ -152,7 +136,6 @@
     .contact-row a:hover { opacity: 0.7; }
     footer { text-align: center; padding: 20px 40px; font-size: 16px; opacity: 0.6; }
 
-    /* ── SCROLL REVEAL ── */
     .reveal { opacity: 0; transform: translateY(36px); transition: opacity 0.8s var(--ease-out-expo), transform 0.8s var(--ease-out-expo); }
     .reveal.visible { opacity: 1; transform: none; }
     .reveal-stagger > * { opacity: 0; transform: translateY(24px); transition: opacity 0.65s var(--ease-out-expo), transform 0.65s var(--ease-out-expo); }
@@ -174,15 +157,12 @@
 </head>
 <body class="home">
 
-  <!-- ══ INTRO ══ -->
   <div id="intro">
     <canvas id="introCanvas"></canvas>
     <div id="introName">Aayush Layane</div>
   </div>
 
-  <!-- ══ PAGE (revealed underneath) ══ -->
   <div id="pageLayer">
-
     <div class="mobile-menu" id="mobileMenu">
       <a href="index.html">Home</a>
       <a href="about.html">About</a>
@@ -212,9 +192,7 @@
     <main>
       <div class="home-container">
         <h1 class="home-name" id="homeName">Aayush Layane</h1>
-        <div>
-          <img src="assets/myphoto.jpg" alt="Aayush Layane" class="home-photo">
-        </div>
+        <div><img src="assets/myphoto.jpg" alt="Aayush Layane" class="home-photo"></div>
         <h2 class="home-tagline">Welcome to my WRLD!!</h2>
         <div class="marquee-wrap">
           <div class="marquee-track" id="marqueeTrack"></div>
@@ -246,9 +224,8 @@
         </div>
       </div>
     </main>
-
     <footer><p>© 2026 Aayush Layane</p></footer>
-  </div><!-- end pageLayer -->
+  </div>
 
   <script>
   // ── MARQUEE ──
@@ -259,247 +236,327 @@
   track.innerHTML = mhtml;
 
   // ══════════════════════════════════════════════════════════
-  //  MERCURY FLUID INTRO
-  //  — Metaballs with chrome radial-gradient shading
-  //  — Flows top-left → bottom-mid → center
-  //  — Name materialises from the fluid
-  //  — Page fades in underneath while fluid still moves
+  //  WEBGL MERCURY METABALL FLUID INTRO
   // ══════════════════════════════════════════════════════════
   (function () {
-    const introEl  = document.getElementById('intro');
-    const nameEl   = document.getElementById('introName');
-    const pageEl   = document.getElementById('pageLayer');
-    const canvas   = document.getElementById('introCanvas');
-    const ctx      = canvas.getContext('2d');
+    const introEl = document.getElementById('intro');
+    const nameEl  = document.getElementById('introName');
+    const pageEl  = document.getElementById('pageLayer');
+    const canvas  = document.getElementById('introCanvas');
 
-    let W, H, cx, cy;
+    const gl = canvas.getContext('webgl', { antialias: true, alpha: false, premultipliedAlpha: false });
+    if (!gl) { introEl.style.display = 'none'; pageEl.style.opacity = '1'; return; }
+
+    let W = window.innerWidth, H = window.innerHeight;
+
     function resize() {
-      W = canvas.width  = window.innerWidth;
-      H = canvas.height = window.innerHeight;
-      cx = W / 2; cy = H / 2;
+      W = window.innerWidth; H = window.innerHeight;
+      canvas.width = W; canvas.height = H;
+      gl.viewport(0, 0, W, H);
     }
     resize();
     window.addEventListener('resize', resize);
 
-    // ── Bezier path: top-left → bottom-mid → center ──
-    function evalBez(t) {
-      // P0=top-left, P1=pull far left+down, P2=bottom-mid, P3=center
-      const p0 = { x: 0.0,  y: 0.02 };
-      const p1 = { x: 0.05, y: 0.9  };
-      const p2 = { x: 0.6,  y: 1.0  };
-      const p3 = { x: 0.5,  y: 0.5  };
-      const mt = 1 - t;
-      return {
-        x: (mt*mt*mt*p0.x + 3*mt*mt*t*p1.x + 3*mt*t*t*p2.x + t*t*t*p3.x) * W,
-        y: (mt*mt*mt*p0.y + 3*mt*mt*t*p1.y + 3*mt*t*t*p2.y + t*t*t*p3.y) * H,
-      };
+    // ── Vertex shader ── (fullscreen quad)
+    const VS = `
+      attribute vec2 a_pos;
+      varying vec2 v_uv;
+      void main() {
+        v_uv = a_pos * 0.5 + 0.5;
+        gl_Position = vec4(a_pos, 0.0, 1.0);
+      }
+    `;
+
+    // ── Fragment shader ── real metaball field + chrome shading
+    const FS = `
+      precision highp float;
+      varying vec2 v_uv;
+
+      uniform vec2  u_res;
+      uniform float u_time;
+      uniform float u_aspect;
+      uniform float u_fade;      // 0=opaque intro, 1=fully faded
+
+      // Up to 28 metaballs: xy=pos (normalised 0..1), z=radius, w=active(0/1)
+      uniform vec3 u_balls[28];
+
+      void main() {
+        vec2 uv = v_uv;
+        uv.x *= u_aspect;
+
+        // ── Compute metaball field ──
+        float field = 0.0;
+        // also track weighted normal for shading
+        vec2  grad  = vec2(0.0);
+
+        for (int i = 0; i < 28; i++) {
+          vec2  bpos = u_balls[i].xy;
+          bpos.x    *= u_aspect;
+          float brad  = u_balls[i].z;
+          if (brad < 0.001) continue;
+
+          vec2  d    = uv - bpos;
+          float r2   = dot(d, d);
+          float r    = sqrt(r2) + 0.0001;
+          float w    = (brad * brad) / (r2 + 0.0001);
+          field     += w;
+          // gradient contribution
+          grad      -= d / (r2 * r2 + 0.0001) * brad * brad * 2.0;
+        }
+
+        // Threshold — this is where fluid merges/separates
+        float threshold = 1.0;
+        float inside    = smoothstep(threshold - 0.18, threshold + 0.18, field);
+
+        if (inside < 0.001) {
+          gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+          return;
+        }
+
+        // ── Chrome / mercury shading ──
+        // Surface normal from gradient
+        vec2  n2   = normalize(grad + vec2(0.0001));
+        vec3  norm = normalize(vec3(n2.x, n2.y, sqrt(max(0.0, 1.0 - dot(n2,n2)))));
+
+        // Key light: top-left
+        vec3  light1 = normalize(vec3(-0.6, 0.8, 0.6));
+        // Fill light: right
+        vec3  light2 = normalize(vec3(0.8, 0.2, 0.5));
+        // Back/rim: bottom
+        vec3  light3 = normalize(vec3(0.0, -0.7, 0.4));
+
+        float diff1  = max(dot(norm, light1), 0.0);
+        float diff2  = max(dot(norm, light2), 0.0) * 0.4;
+        float diff3  = max(dot(norm, light3), 0.0) * 0.25;
+
+        // Specular — tight Blinn-Phong for mirror-like chrome
+        vec3  viewDir = vec3(0.0, 0.0, 1.0);
+        vec3  h1      = normalize(light1 + viewDir);
+        vec3  h2      = normalize(light2 + viewDir);
+        float spec1   = pow(max(dot(norm, h1), 0.0), 120.0);
+        float spec2   = pow(max(dot(norm, h2), 0.0), 60.0) * 0.5;
+
+        // Mercury palette: dark steel-blue in shadows, bright silver-white in light
+        vec3 shadowCol  = vec3(0.04, 0.06, 0.09);   // near-black with blue tint
+        vec3 midCol     = vec3(0.38, 0.46, 0.52);   // steel blue-grey
+        vec3 brightCol  = vec3(0.88, 0.92, 0.96);   // icy silver
+        vec3 specCol    = vec3(1.00, 1.00, 1.00);   // mirror white
+
+        // Blend diffuse lighting into colour
+        float light     = diff1 + diff2 + diff3;
+        vec3  baseColor = mix(shadowCol, mix(midCol, brightCol, diff1), light);
+
+        // Add specular on top
+        vec3  color     = baseColor + spec1 * specCol + spec2 * brightCol * 0.6;
+
+        // Rim — subtle blue rim from bottom
+        float rim       = pow(1.0 - max(dot(norm, viewDir), 0.0), 3.0);
+        color          += rim * vec3(0.08, 0.14, 0.22) * 0.6;
+
+        // Edge softness — fade at the boundary
+        color          *= inside;
+
+        // Subtle animated inner shimmer (time-based ripple in surface)
+        float shimmer  = sin(dot(uv, vec2(8.0, 12.0)) + u_time * 2.5) * 0.03;
+        color          += shimmer * brightCol * inside;
+
+        // Fade out the fluid
+        float alpha    = inside * (1.0 - u_fade);
+
+        gl_FragColor   = vec4(mix(vec3(0.0), color, alpha), 1.0);
+      }
+    `;
+
+    // ── Compile shaders ──
+    function compile(type, src) {
+      const s = gl.createShader(type);
+      gl.shaderSource(s, src);
+      gl.compileShader(s);
+      if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
+        console.error(gl.getShaderInfoLog(s));
+      }
+      return s;
     }
 
-    // ── Metaball system ──
-    // Each ball has position, radius, and a "path t" tracking its progress
-    const balls = [];
+    const prog = gl.createProgram();
+    gl.attachShader(prog, compile(gl.VERTEX_SHADER, VS));
+    gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, FS));
+    gl.linkProgram(prog);
+    gl.useProgram(prog);
 
-    // Spawn a new ball along the path at position t
-    function spawnBall(pathT, radiusMult) {
-      const pos = evalBez(pathT);
-      // Add organic wobble
-      const wobble = 18 * (1 - pathT * 0.5);
-      balls.push({
-        x:    pos.x + (Math.random() - 0.5) * wobble,
-        y:    pos.y + (Math.random() - 0.5) * wobble,
-        tx:   pos.x, // target
-        ty:   pos.y,
-        r:    (55 + Math.random() * 45) * radiusMult,
-        vx:   (Math.random() - 0.5) * 0.6,
-        vy:   (Math.random() - 0.5) * 0.6,
-        life: 1.0,
-        decay: 0.0, // controlled externally
-        pathT,
-      });
+    // Fullscreen quad
+    const buf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+    const aPos = gl.getAttribLocation(prog, 'a_pos');
+    gl.enableVertexAttribArray(aPos);
+    gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+
+    // Uniform locations
+    const uRes    = gl.getUniformLocation(prog, 'u_res');
+    const uTime   = gl.getUniformLocation(prog, 'u_time');
+    const uAspect = gl.getUniformLocation(prog, 'u_aspect');
+    const uFade   = gl.getUniformLocation(prog, 'u_fade');
+    const uBalls  = gl.getUniformLocation(prog, 'u_balls[0]');
+
+    // ── Metaball definitions ──
+    // Each ball travels a path segment. We define waypoints and timing.
+    // Path: top-left → snake down-left → curve right across bottom → sweep up to center
+    // 28 balls total, staggered spawn times along the path
+
+    const NUM_BALLS = 28;
+
+    // Bezier path waypoints (normalised 0..1 coords)
+    // The fluid snakes: TL → bottom-left → bottom-right → center
+    function pathPos(t) {
+      // Segment 1: 0..0.35 — top-left down to bottom-left
+      // Segment 2: 0.35..0.70 — bottom-left sweep right across bottom
+      // Segment 3: 0.70..1.0 — sweep up-right to center
+      if (t < 0.35) {
+        const s = t / 0.35;
+        const ease = s * s * (3 - 2 * s);
+        return {
+          x: 0.02 + ease * 0.12,
+          y: 0.0  + ease * 0.88,
+        };
+      } else if (t < 0.70) {
+        const s = (t - 0.35) / 0.35;
+        const ease = s * s * (3 - 2 * s);
+        // cubic bezier across bottom
+        const p0x = 0.14, p0y = 0.88;
+        const p1x = 0.25, p1y = 1.05; // dip below
+        const p2x = 0.75, p2y = 1.05;
+        const p3x = 0.88, p3y = 0.85;
+        const mt = 1 - ease;
+        return {
+          x: mt*mt*mt*p0x + 3*mt*mt*ease*p1x + 3*mt*ease*ease*p2x + ease*ease*ease*p3x,
+          y: mt*mt*mt*p0y + 3*mt*mt*ease*p1y + 3*mt*ease*ease*p2y + ease*ease*ease*p3y,
+        };
+      } else {
+        const s = (t - 0.70) / 0.30;
+        const ease = s * s * (3 - 2 * s);
+        // sweep from bottom-right up to center
+        const p0x = 0.88, p0y = 0.85;
+        const p1x = 0.80, p1y = 0.30;
+        const p2x = 0.65, p2y = 0.45;
+        const p3x = 0.50, p3y = 0.50;
+        const mt = 1 - ease;
+        return {
+          x: mt*mt*mt*p0x + 3*mt*mt*ease*p1x + 3*mt*ease*ease*p2x + ease*ease*ease*p3x,
+          y: mt*mt*mt*p0y + 3*mt*mt*ease*p1y + 3*mt*ease*ease*p2y + ease*ease*ease*p3y,
+        };
+      }
     }
 
-    // ── Chrome radial gradient for a single metaball ──
-    function drawChromeBall(x, y, r, alpha) {
-      if (r < 1) return;
-
-      // Outer glow — dark mercury shadow
-      const glow = ctx.createRadialGradient(x, y, r * 0.0, x, y, r * 1.4);
-      glow.addColorStop(0,   `rgba(140,158,165,${alpha * 0.12})`);
-      glow.addColorStop(0.6, `rgba(80,100,110,${alpha * 0.06})`);
-      glow.addColorStop(1.0, `rgba(0,0,0,0)`);
-      ctx.beginPath();
-      ctx.arc(x, y, r * 1.4, 0, Math.PI * 2);
-      ctx.fillStyle = glow;
-      ctx.fill();
-
-      // Main body — dark-to-bright chrome radial
-      // Offset highlight toward top-left (light source direction)
-      const hx = x - r * 0.28;
-      const hy = y - r * 0.32;
-      const body = ctx.createRadialGradient(hx, hy, r * 0.05, x, y, r);
-      body.addColorStop(0.00, `rgba(255,255,255,${alpha * 0.98})`);  // mirror white
-      body.addColorStop(0.08, `rgba(220,235,242,${alpha * 0.95})`);  // icy silver
-      body.addColorStop(0.22, `rgba(165,188,198,${alpha * 0.90})`);  // light steel
-      body.addColorStop(0.42, `rgba(90,115,125,${alpha * 0.85})`);   // mid chrome
-      body.addColorStop(0.62, `rgba(28,38,44,${alpha * 0.92})`);     // deep shadow
-      body.addColorStop(0.78, `rgba(15,22,26,${alpha * 0.95})`);     // near black
-      body.addColorStop(0.90, `rgba(55,80,90,${alpha * 0.80})`);     // reflected ground
-      body.addColorStop(1.00, `rgba(100,125,135,${alpha * 0.40})`);  // rim light
-
-      ctx.beginPath();
-      ctx.arc(x, y, r, 0, Math.PI * 2);
-      ctx.fillStyle = body;
-      ctx.fill();
-
-      // Secondary specular — small bright flare (reflection of key light)
-      const sx  = x - r * 0.18;
-      const sy  = y - r * 0.20;
-      const sr  = r * 0.28;
-      const spec = ctx.createRadialGradient(sx, sy, 0, sx, sy, sr);
-      spec.addColorStop(0.0, `rgba(255,255,255,${alpha * 0.85})`);
-      spec.addColorStop(0.5, `rgba(230,243,250,${alpha * 0.35})`);
-      spec.addColorStop(1.0, `rgba(200,225,238,0)`);
-      ctx.beginPath();
-      ctx.arc(sx, sy, sr, 0, Math.PI * 2);
-      ctx.fillStyle = spec;
-      ctx.fill();
-
-      // Tiny sharp specular dot
-      const dot = ctx.createRadialGradient(x - r*0.32, y - r*0.38, 0, x - r*0.32, y - r*0.38, r * 0.08);
-      dot.addColorStop(0,   `rgba(255,255,255,${alpha * 0.95})`);
-      dot.addColorStop(1,   `rgba(255,255,255,0)`);
-      ctx.beginPath();
-      ctx.arc(x - r*0.32, y - r*0.38, r * 0.08, 0, Math.PI * 2);
-      ctx.fillStyle = dot;
-      ctx.fill();
-
-      // Bottom rim reflection (ground bounce)
-      const rim = ctx.createRadialGradient(x + r*0.1, y + r*0.72, 0, x + r*0.1, y + r*0.72, r * 0.38);
-      rim.addColorStop(0,   `rgba(160,195,210,${alpha * 0.40})`);
-      rim.addColorStop(1,   `rgba(100,140,158,0)`);
-      ctx.beginPath();
-      ctx.arc(x + r*0.1, y + r*0.72, r * 0.38, 0, Math.PI * 2);
-      ctx.fillStyle = rim;
-      ctx.fill();
+    // Ball state
+    const ballData = [];
+    for (let i = 0; i < NUM_BALLS; i++) {
+      const spawnDelay = (i / NUM_BALLS) * 3400; // staggered over 3.4s
+      const pathOffset = i / NUM_BALLS;           // each starts at different path position
+      const rad = 0.055 + Math.random() * 0.055;  // normalised radius
+      const wobX = (Math.random() - 0.5) * 0.06;
+      const wobY = (Math.random() - 0.5) * 0.06;
+      const wobSpeed = 0.4 + Math.random() * 0.8;
+      const wobPhase = Math.random() * Math.PI * 2;
+      ballData.push({ spawnDelay, pathOffset, rad, wobX, wobY, wobSpeed, wobPhase, alive: false });
     }
 
-    // ── Timing (ms) ──
-    const FLOW_END        = 3000;  // fluid finishes travelling path
-    const NAME_FADE_START = 2800;  // name starts emerging
-    const NAME_FADE_END   = 4000;  // name fully visible
-    const PAGE_FADE_START = 3200;  // page starts revealing underneath
-    const FLUID_FADE_START= 4000;  // fluid starts evaporating
-    const FLUID_FADE_END  = 5400;  // fluid fully gone → intro removed
+    // ── Timing ──
+    const FLOW_DURATION   = 4200;  // total flow time
+    const NAME_START      = 3200;
+    const PAGE_START      = 3600;
+    const FLUID_FADE_START= 4400;
+    const FLUID_FADE_END  = 5800;
 
     let startTime = null;
     let animId    = null;
-    let lastSpawn = 0;
-    let flowProgress = 0; // 0→1 along the bezier path
 
-    function easeInOut(t) { return t < 0.5 ? 2*t*t : 1 - Math.pow(-2*t+2, 2)/2; }
-    function easeOut(t)   { return 1 - Math.pow(1-t, 3); }
-    function clamp(v,a,b) { return Math.max(a, Math.min(b, v)); }
+    function clamp(v,a,b) { return Math.max(a,Math.min(b,v)); }
+    function easeOut(t)   { return 1 - Math.pow(1-t,3); }
+    function easeInOut(t) { return t<0.5 ? 2*t*t : 1-Math.pow(-2*t+2,2)/2; }
 
     function loop(ts) {
       if (!startTime) startTime = ts;
       const elapsed = ts - startTime;
+      const sec     = elapsed / 1000;
 
-      // Clear with full black each frame — the chrome look
-      // comes from layered gradients per ball, not trail smearing
-      ctx.clearRect(0, 0, W, H);
-      ctx.fillStyle = '#000';
-      ctx.fillRect(0, 0, W, H);
+      gl.clearColor(0, 0, 0, 1);
+      gl.clear(gl.COLOR_BUFFER_BIT);
 
-      // ── 1. Advance flow and spawn new balls ──
-      flowProgress = Math.min(easeInOut(elapsed / FLOW_END), 1.0);
+      // Set uniforms
+      gl.uniform2f(uRes, W, H);
+      gl.uniform1f(uTime, sec);
+      gl.uniform1f(uAspect, W / H);
 
-      if (elapsed < FLOW_END + 400) {
-        const spawnInterval = 38; // ms between spawns
-        if (elapsed - lastSpawn > spawnInterval) {
-          lastSpawn = elapsed;
-          // Spawn cluster at current path position
-          const clusterSize = 3 + Math.floor(flowProgress * 4);
-          for (let i = 0; i < clusterSize; i++) {
-            const jitter = (Math.random() - 0.5) * 0.05;
-            spawnBall(clamp(flowProgress + jitter, 0, 1), 0.8 + flowProgress * 0.5);
-          }
-          // Also seed a few balls slightly behind for density
-          for (let i = 0; i < 2; i++) {
-            const behind = clamp(flowProgress - Math.random() * 0.15, 0, 1);
-            spawnBall(behind, 0.6 + flowProgress * 0.4);
-          }
-        }
-      }
-
-      // ── 2. Update ball physics ──
-      const fluidFadeT = elapsed > FLUID_FADE_START
+      // Fluid fade
+      const fadeProg = elapsed > FLUID_FADE_START
         ? clamp((elapsed - FLUID_FADE_START) / (FLUID_FADE_END - FLUID_FADE_START), 0, 1)
         : 0;
+      gl.uniform1f(uFade, easeOut(fadeProg));
 
-      for (let i = balls.length - 1; i >= 0; i--) {
-        const b = balls[i];
+      // Update and pack ball positions
+      const ballArr = new Float32Array(NUM_BALLS * 3);
+      for (let i = 0; i < NUM_BALLS; i++) {
+        const b = ballData[i];
 
-        // Gentle drift toward path target
-        b.vx += (b.tx - b.x) * 0.012;
-        b.vy += (b.ty - b.y) * 0.012;
-
-        // Cohesion — balls attract each other slightly
-        for (let j = 0; j < balls.length; j++) {
-          if (i === j) continue;
-          const dx = balls[j].x - b.x;
-          const dy = balls[j].y - b.y;
-          const dist = Math.sqrt(dx*dx + dy*dy) + 0.001;
-          if (dist < (b.r + balls[j].r) * 1.6) {
-            b.vx += dx / dist * 0.04;
-            b.vy += dy / dist * 0.04;
-          }
+        if (elapsed < b.spawnDelay) {
+          // not spawned yet — park off screen
+          ballArr[i*3]   = -1.0;
+          ballArr[i*3+1] = -1.0;
+          ballArr[i*3+2] = 0.0;
+          continue;
         }
 
-        b.vx *= 0.88;
-        b.vy *= 0.88;
-        b.x  += b.vx;
-        b.y  += b.vy;
+        // How far along has this ball progressed on the path
+        const age      = elapsed - b.spawnDelay;
+        const pathT    = clamp(easeInOut(age / FLOW_DURATION), 0, 1);
+        const pos      = pathPos(pathT);
 
-        // Shrink and fade during fluid evaporation
-        if (fluidFadeT > 0) {
-          b.r   *= (1 - fluidFadeT * 0.018);
-          b.life = 1 - fluidFadeT;
-        }
+        // Organic wobble
+        const wobble   = Math.sin(sec * b.wobSpeed + b.wobPhase);
+        const wobble2  = Math.cos(sec * b.wobSpeed * 1.3 + b.wobPhase + 1.2);
 
-        if (b.r < 2 || b.life <= 0) { balls.splice(i, 1); }
+        let px = pos.x + b.wobX * wobble;
+        let py = pos.y + b.wobY * wobble2;
+
+        // Clamp to screen roughly
+        px = clamp(px, -0.1, 1.1);
+        py = clamp(py, -0.15, 1.15);
+
+        // Shrink during fade
+        const r = b.rad * (1.0 - fadeProg * 0.85);
+
+        ballArr[i*3]   = px;
+        ballArr[i*3+1] = 1.0 - py; // flip Y for GL convention
+        ballArr[i*3+2] = r;
       }
 
-      // ── 3. Draw all chrome balls ──
-      // Sort back to front by radius for better layering
-      const sorted = [...balls].sort((a, b) => b.r - a.r);
-      for (const b of sorted) {
-        drawChromeBall(b.x, b.y, b.r, b.life);
+      // Upload ball data as vec3 array
+      for (let i = 0; i < NUM_BALLS; i++) {
+        const loc = gl.getUniformLocation(prog, `u_balls[${i}]`);
+        gl.uniform3f(loc, ballArr[i*3], ballArr[i*3+1], ballArr[i*3+2]);
       }
 
-      // ── 4. Name emergence ──
-      if (elapsed > NAME_FADE_START) {
-        const nt = clamp((elapsed - NAME_FADE_START) / (NAME_FADE_END - NAME_FADE_START), 0, 1);
-        nameEl.style.opacity = String(easeOut(nt));
-        // subtle scale — grows from 0.9 to 1 as it materialises
-        const sc = 0.90 + easeOut(nt) * 0.10;
-        nameEl.style.transform = `translate(-50%, -50%) scale(${sc})`;
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+
+      // Name appearance
+      if (elapsed > NAME_START) {
+        nameEl.classList.add('show');
       }
 
-      // ── 5. Page fade-in underneath ──
-      if (elapsed > PAGE_FADE_START) {
-        const pt = clamp((elapsed - PAGE_FADE_START) / (FLUID_FADE_END - PAGE_FADE_START), 0, 1);
+      // Page fade in underneath
+      if (elapsed > PAGE_START) {
+        const pt = clamp((elapsed - PAGE_START) / (FLUID_FADE_END - PAGE_START), 0, 1);
         pageEl.style.opacity = String(easeOut(pt));
       }
 
-      // ── 6. Intro overlay evaporation ──
+      // Intro bg fade (so page shows through)
       if (elapsed > FLUID_FADE_START) {
-        // Fade the black background of the intro out — reveals page under
         const ft = clamp((elapsed - FLUID_FADE_START) / (FLUID_FADE_END - FLUID_FADE_START), 0, 1);
-        introEl.style.background = `rgba(0,0,0,${1 - easeOut(ft)})`;
+        introEl.style.background = `rgba(0,0,0,${(1 - easeOut(ft)).toFixed(3)})`;
       }
 
-      // ── 7. Done ──
-      if (elapsed > FLUID_FADE_END) {
+      if (elapsed >= FLUID_FADE_END) {
         introEl.style.display = 'none';
         cancelAnimationFrame(animId);
         return;
@@ -509,21 +566,16 @@
     }
 
     function startIntro() {
-      startTime = null; lastSpawn = 0; flowProgress = 0;
-      balls.length = 0;
-      ctx.clearRect(0, 0, W, H);
-      nameEl.style.opacity   = '0';
-      nameEl.style.transform = 'translate(-50%, -50%) scale(0.90)';
-      introEl.style.display  = 'block';
+      startTime  = null;
+      nameEl.classList.remove('show');
+      introEl.style.display    = 'block';
       introEl.style.background = '#000';
-      pageEl.style.opacity   = '0';
-      pageEl.style.transition = 'none';
+      pageEl.style.opacity     = '0';
       cancelAnimationFrame(animId);
       animId = requestAnimationFrame(loop);
     }
 
     startIntro();
-
     document.getElementById('homeName').addEventListener('click', startIntro);
   })();
 
